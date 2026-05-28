@@ -1,0 +1,30 @@
+name: test.yaml
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - README.md
+      - LICENSE
+      - .gitignore
+  pull_request:
+    branches: [ "main" ]
+    paths-ignore:
+      - README.md
+      - LICENSE
+      - .gitignore
+
+permissions:
+  contents: read
+
+jobs:
+  buf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Buf CLI
+        uses: bufbuild/buf-action@v1
+        with:
+          lint: true
