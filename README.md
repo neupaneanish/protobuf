@@ -1,2 +1,7 @@
-# protobuf
-This repository is single source of protobuf for Portfolio API and client
+# Portfolio Protobuf
+
+###### Developed by [Anish Neupane](https://neupaenanish.com.np)
+
+This repository serves as Single Source of Truth for Portfolio ecosystem.
+
+## [License](LICENSE)
