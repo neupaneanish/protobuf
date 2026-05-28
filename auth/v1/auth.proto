@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package auth.v1;
+
+import "buf/validate/validate.proto";
+import "common/password/v1/password.proto";
+import "google/protobuf/timestamp.proto";
+
+service AuthService {
+  rpc Login(LoginRequest) returns (LoginResponse);
+}
+
+message LoginRequest {
+  string email = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.email = true
+  ];
+  common.password.v1.Password password = 2 [(buf.validate.field).required = true];
+}
+
+message LoginResponse {
+  oneof response {
+    string session = 1;
+    Token token = 2;
+  }
+}
+
+message Token {
+  string access = 1;
+  string refresh = 2;
+  google.protobuf.Timestamp expire_at = 3;
+}
