@@ -27,4 +27,7 @@ jobs:
       - name: Setup Buf CLI
         uses: bufbuild/buf-action@v1
         with:
-          lint: true
+          setup_only: true
+
+      - name: Run Buf Lint
+        run: buf lint
