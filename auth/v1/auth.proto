@@ -8,6 +8,7 @@ import "google/protobuf/timestamp.proto";
 
 service AuthService {
   rpc Login(LoginRequest) returns (LoginResponse);
+  rpc ForgetPassword(ForgetPasswordRequest) returns (ForgetPasswordResponse);
 }
 
 message LoginRequest {
@@ -29,4 +30,15 @@ message Token {
   string access = 1;
   string refresh = 2;
   google.protobuf.Timestamp expire_at = 3;
+}
+
+message ForgetPasswordRequest {
+  string email = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.email = true
+  ];
+}
+
+message ForgetPasswordResponse {
+  string session = 1;
 }
