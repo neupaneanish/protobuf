@@ -9,6 +9,7 @@ import "google/protobuf/timestamp.proto";
 service AuthService {
   rpc Login(LoginRequest) returns (LoginResponse);
   rpc ForgetPassword(ForgetPasswordRequest) returns (ForgetPasswordResponse);
+  rpc Verification(VerificationRequest) returns (VerificationResponse);
 }
 
 message LoginRequest {
@@ -40,5 +41,17 @@ message ForgetPasswordRequest {
 }
 
 message ForgetPasswordResponse {
+  string session = 1;
+}
+
+message VerificationRequest {
+  string session = 1 [(buf.validate.field).required = true];
+  string code = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.len = 8
+  ];
+}
+
+message VerificationResponse {
   string session = 1;
 }
