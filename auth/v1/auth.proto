@@ -4,7 +4,6 @@ package auth.v1;
 
 import "buf/validate/validate.proto";
 import "common/password/v1/password.proto";
-import "common/username/v1/username.proto";
 import "google/protobuf/timestamp.proto";
 
 service AuthService {
@@ -16,7 +15,10 @@ service AuthService {
 }
 
 message LoginRequest {
-  common.username.v1.Username username = 1 [(buf.validate.field).required = true];
+  string email = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.email = true
+  ];
   common.password.v1.Password password = 2 [(buf.validate.field).required = true];
 }
 
@@ -34,7 +36,10 @@ message Token {
 }
 
 message ForgetPasswordRequest {
-  common.username.v1.Username username = 1 [(buf.validate.field).required = true];
+  string email = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.email = true
+  ];
 }
 
 message ForgetPasswordResponse {
