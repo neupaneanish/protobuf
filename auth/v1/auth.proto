@@ -7,11 +7,65 @@ import "common/password/v1/password.proto";
 import "google/protobuf/timestamp.proto";
 
 service AuthService {
+  rpc Register(RegisterRequest) returns (RegisterResponse);
   rpc Login(LoginRequest) returns (LoginResponse);
   rpc LoginTwoFactor(LoginTwoFactorRequest) returns (LoginTwoFactorResponse);
   rpc ForgetPassword(ForgetPasswordRequest) returns (ForgetPasswordResponse);
   rpc Verification(VerificationRequest) returns (VerificationResponse);
   rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
+  rpc AccountVerification(AccountVerificationRequest) returns (AccountVerificationResponse);
+  rpc ResendAccountVerification(ResendAccountVerificationRequest) returns (ResendAccountVerificationResponse);
+}
+
+message RegisterRequest {
+  string name = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 5
+      max_len: 24
+      pattern: "^[a-zA-Z]+( [a-zA-Z]+)*$"
+    }
+  ];
+  string email = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.email = true
+  ];
+  common.password.v1.Password password = 3 [(buf.validate.field).required = true];
+  common.password.v1.Password confirm_password = 4 [(buf.validate.field).required = true];
+  string phone = 5 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 10
+      max_len: 16
+      pattern: "^\\+[1-9]\\d{1,14}$"
+    }
+  ];
+  google.protobuf.Timestamp dob = 6 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).cel = {
+      id: "dob_eighteen_plus"
+      message: "You must be at least 18 years old to register."
+      expression: "this <= now - duration('568036800s')"
+    }
+  ];
+  string avatar = 7 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uri = true
+  ];
+  string about = 8 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {min_len: 20}
+  ];
+
+  option (buf.validate.message).cel = {
+    id: "password_match"
+    expression: "this.password.value == this.confirm_password.value"
+    message: "passwords must match"
+  };
+}
+
+message RegisterResponse {
+  string session = 1;
 }
 
 message LoginRequest {
@@ -26,6 +80,7 @@ message LoginResponse {
   oneof response {
     string session = 1;
     Token token = 2;
+    string verification = 3;
   }
 }
 
@@ -43,7 +98,10 @@ message ForgetPasswordRequest {
 }
 
 message ForgetPasswordResponse {
-  string session = 1;
+  oneof response {
+    string session = 1;
+    string verification = 2;
+  }
 }
 
 message VerificationRequest {
@@ -89,4 +147,27 @@ message LoginTwoFactorRequest {
 
 message LoginTwoFactorResponse {
   Token token = 1;
+}
+
+message AccountVerificationRequest {
+  string session = 1 [(buf.validate.field).required = true];
+  string code = 2 [(buf.validate.field).string = {
+    len: 8
+    pattern: "^[A-Z0-9]+$"
+  }];
+}
+
+message AccountVerificationResponse {
+  oneof response {
+    string session = 1;
+    Token token = 2;
+  }
+}
+
+message ResendAccountVerificationRequest {
+  string session = 1 [(buf.validate.field).required = true];
+}
+
+message ResendAccountVerificationResponse {
+  string session = 1;
 }
