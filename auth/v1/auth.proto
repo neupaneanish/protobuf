@@ -48,14 +48,6 @@ message RegisterRequest {
       expression: "this <= now - duration('568036800s')"
     }
   ];
-  string avatar = 7 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string.uri = true
-  ];
-  string about = 8 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {min_len: 20}
-  ];
 
   option (buf.validate.message).cel = {
     id: "password_match"
