@@ -70,7 +70,7 @@ message LoginRequest {
 
 message LoginResponse {
   oneof response {
-    string session = 1;
+    string totp = 1;
     Token token = 2;
     string verification = 3;
   }
@@ -151,8 +151,9 @@ message AccountVerificationRequest {
 
 message AccountVerificationResponse {
   oneof response {
-    string session = 1;
+    string totp = 1;
     Token token = 2;
+    string reset = 3;
   }
 }
 
