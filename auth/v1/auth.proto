@@ -151,9 +151,9 @@ message AccountVerificationRequest {
 
 message AccountVerificationResponse {
   oneof response {
-    string totp = 1;
+    string totp_session = 1;
     Token token = 2;
-    string reset = 3;
+    string reset_session = 3;
   }
 }
 
