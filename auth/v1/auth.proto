@@ -32,14 +32,6 @@ message RegisterRequest {
       pattern: "^\\+[1-9]\\d{1,14}$"
     }
   ];
-  google.protobuf.Timestamp dob = 6 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).cel = {
-      id: "dob_eighteen_plus"
-      message: "You must be at least 18 years old to register."
-      expression: "this <= now - duration('568036800s')"
-    }
-  ];
 
   option (buf.validate.message).cel = {
     id: "password_match"
