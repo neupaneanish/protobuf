@@ -18,21 +18,13 @@ service AuthService {
 }
 
 message RegisterRequest {
-  string name = 1 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      min_len: 5
-      max_len: 24
-      pattern: "^[a-zA-Z]+( [a-zA-Z]+)*$"
-    }
-  ];
-  string email = 2 [
+  string email = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string.email = true
   ];
-  common.password.v1.Password password = 3 [(buf.validate.field).required = true];
-  common.password.v1.Password confirm_password = 4 [(buf.validate.field).required = true];
-  string phone = 5 [
+  common.password.v1.Password password = 2 [(buf.validate.field).required = true];
+  common.password.v1.Password confirm_password = 3 [(buf.validate.field).required = true];
+  string phone = 4 [
     (buf.validate.field).required = true,
     (buf.validate.field).string = {
       min_len: 10
