@@ -47,6 +47,8 @@ This matrix tracks the structural schema completion for external edges, internal
     - [X] `List`
 - [X] **Profile**
     - [X] `Create` | `Get` | `Update`
+- [X] **Social**
+    - [X] `Create` | `Update` | `Delete` | `List`
 
 ### Root / Admin
 
