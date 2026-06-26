@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package gateway.profile.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+service ProfileService {
+  rpc Create(CreateRequest) returns (CreateResponse);
+  rpc Get(GetRequest) returns (GetResponse);
+  rpc Update(UpdateRequest) returns (UpdateResponse);
+}
+
+message CreateRequest {
+  string name = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 5
+      max_len: 24
+      pattern: "^[a-zA-Z]+( [a-zA-Z]+)*$"
+    }
+  ];
+  google.protobuf.StringValue headline = 2;
+  google.protobuf.Timestamp dob = 3 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).cel = {
+      id: "dob_eighteen_plus"
+      message: "You must be at least 18 years old."
+      expression: "this <= now - duration('568036800s')"
+    }
+  ];
+}
+
+message CreateResponse {}
+
+message UpdateRequest {
+  google.protobuf.StringValue headline = 1;
+  google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
+}
+
+message UpdateResponse {
+  Profile profile = 1;
+}
+
+message GetRequest {}
+
+message GetResponse {
+  Profile profile = 1;
+}
+
+message Profile {
+  string user_id = 1;
+  string name = 2;
+  google.protobuf.StringValue heading = 3;
+  google.protobuf.Timestamp dob = 4;
+  google.protobuf.Timestamp created_at = 5;
+  string created_by = 6;
+  google.protobuf.Timestamp updated_at = 7;
+  string updated_by = 8;
+}
