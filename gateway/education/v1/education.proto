@@ -1,0 +1,131 @@
+syntax = "proto3";
+
+package gateway.education.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+service EducationService {
+  rpc Create(CreateRequest) returns (CreateResponse);
+  rpc Get(GetRequest) returns (GetResponse);
+  rpc Update(UpdateRequest) returns (UpdateResponse);
+  rpc Delete(DeleteRequest) returns (DeleteResponse);
+  rpc List(ListRequest) returns (ListResponse);
+}
+
+message ListRequest {}
+
+message ListResponse {
+  repeated Education educations = 1;
+}
+
+message GetRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message GetResponse {
+  Education education = 1;
+}
+
+message CreateRequest {
+  string school = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 5
+      max_len: 64
+    }
+  ];
+  string degree = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 5
+      max_len: 64
+    }
+  ];
+  google.protobuf.StringValue affiliation = 3;
+  google.protobuf.StringValue field_of_study = 4;
+  google.protobuf.StringValue concentration = 5;
+  google.protobuf.Timestamp start_date = 6 [(buf.validate.field).required = true];
+  google.protobuf.Timestamp end_date = 7;
+  string address = 8 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 5
+      max_len: 64
+    }
+  ];
+  google.protobuf.StringValue description = 9;
+
+  option (buf.validate.message).cel = {
+    id: "education_dates"
+    message: "End date cannot be in the future and must be after the start date."
+    expression: "!has(this.end_date) || (this.end_date <= now && this.end_date >= this.start_date)"
+  };
+}
+
+message CreateResponse {
+  Education education = 1;
+}
+
+message UpdateRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  optional string school = 2 [(buf.validate.field).string = {
+    min_len: 5
+    max_len: 128
+  }];
+  optional string degree = 3 [(buf.validate.field).string = {
+    min_len: 5
+    max_len: 128
+  }];
+  google.protobuf.StringValue affiliation = 4;
+  google.protobuf.StringValue field_of_study = 5;
+  google.protobuf.StringValue concentration = 6;
+  google.protobuf.Timestamp start_date = 7;
+  google.protobuf.Timestamp end_date = 8;
+  optional string address = 9 [(buf.validate.field).string = {
+    min_len: 5
+    max_len: 128
+  }];
+  google.protobuf.StringValue description = 10;
+  google.protobuf.Timestamp updated_at = 11 [(buf.validate.field).required = true];
+  google.protobuf.FieldMask update_mask = 12 [(buf.validate.field).required = true];
+}
+
+message UpdateResponse {
+  Education education = 1;
+}
+
+message DeleteRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
+}
+
+message DeleteResponse {}
+
+message Education {
+  string id = 1;
+  string school = 2;
+  string degree = 3;
+  google.protobuf.StringValue affiliation = 4;
+  google.protobuf.StringValue field_of_study = 5;
+  google.protobuf.StringValue concentration = 6;
+  google.protobuf.Timestamp start_date = 7;
+  google.protobuf.Timestamp end_date = 8;
+  string address = 9;
+  google.protobuf.StringValue description = 10;
+  google.protobuf.Timestamp created_at = 11;
+  string created_by = 12;
+  google.protobuf.Timestamp updated_at = 13;
+  string updated_by = 14;
+}
