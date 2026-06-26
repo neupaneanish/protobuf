@@ -1,0 +1,109 @@
+syntax = "proto3";
+
+package gateway.authentication.v1;
+
+import "common/password/v1/password.proto";
+import "buf/validate/validate.proto";
+
+service AuthenticationService {
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
+  rpc VerifyChangePassword(VerifyChangePasswordRequest) returns (VerifyChangePasswordResponse);
+  rpc ConfirmChangePassword(ConfirmChangePasswordRequest) returns (ConfirmChangePasswordResponse);
+  rpc EnableTwoFactor(EnableTwoFactorRequest) returns (EnableTwoFactorResponse);
+  rpc VerifyTwoFactor(VerifyTwoFactorRequest) returns (VerifyTwoFactorResponse);
+  rpc ConfirmTwoFactor(ConfirmTwoFactorRequest) returns (ConfirmTwoFactorResponse);
+  rpc DeleteTwoFactor(DeleteTwoFactorRequest) returns (DeleteTwoFactorResponse);
+  rpc ConfirmDeleteTwoFactor(ConfirmDeleteTwoFactorRequest) returns (ConfirmDeleteTwoFactorResponse);
+}
+
+message ChangePasswordRequest {
+  common.password.v1.Password password = 1 [(buf.validate.field).required = true];
+}
+
+message ChangePasswordResponse {
+  string session = 1;
+}
+
+message VerifyChangePasswordRequest {
+  string session = 1 [(buf.validate.field).required = true];
+  string code = 2 [(buf.validate.field).required = true, (buf.validate.field).string = {
+    len: 8
+    pattern: "^[A-Z0-9]+$"
+  }];
+}
+
+message VerifyChangePasswordResponse {
+  string session = 1;
+}
+
+message ConfirmChangePasswordRequest {
+  string session = 1 [(buf.validate.field).required = true];
+  common.password.v1.Password password = 2 [(buf.validate.field).required = true];
+  common.password.v1.Password confirm_password = 3 [(buf.validate.field).required = true];
+
+  option (buf.validate.message).cel = {
+    id: "password_miss_match"
+    expression: "this.password.value == this.confirm_password.value"
+    message: "Password and confirm password must match"
+  };
+}
+
+message ConfirmChangePasswordResponse {}
+
+message EnableTwoFactorRequest {
+  common.password.v1.Password password = 1 [(buf.validate.field).required = true];
+}
+
+message EnableTwoFactorResponse {
+  string session = 1;
+}
+
+message VerifyTwoFactorRequest {
+  string session = 1 [(buf.validate.field).required = true];
+  string code = 2 [(buf.validate.field).required = true, (buf.validate.field).string = {
+    len: 8
+    pattern: "^[A-Z0-9]+$"
+  }];
+}
+
+message VerifyTwoFactorResponse {
+  string session = 1;
+  string uri = 2;
+  string key = 3;
+}
+
+message ConfirmTwoFactorRequest {
+  string session = 1 [(buf.validate.field).required = true];
+  string code = 2 [(buf.validate.field).required = true, (buf.validate.field).string = {
+    len: 6
+    pattern: "^[0-9]+$"
+  }];
+}
+
+message ConfirmTwoFactorResponse {
+  repeated string codes = 1;
+}
+
+message DeleteTwoFactorRequest {
+  common.password.v1.Password password = 1 [(buf.validate.field).required = true];
+}
+
+message DeleteTwoFactorResponse {
+  string session = 1;
+}
+
+message ConfirmDeleteTwoFactorRequest {
+  string session = 1 [(buf.validate.field).required = true];
+  oneof code {
+    string totp = 2 [(buf.validate.field).string = {
+      len: 6
+      pattern: "^[0-9]+$"
+    }];
+    string recovery = 3 [(buf.validate.field).string = {
+      len: 10
+      pattern: "^[A-Z0-9]+$"
+    }];
+  }
+}
+
+message ConfirmDeleteTwoFactorResponse {}
