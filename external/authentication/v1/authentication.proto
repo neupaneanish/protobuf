@@ -15,6 +15,7 @@ service AuthenticationService {
   rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
   rpc AccountVerification(AccountVerificationRequest) returns (AccountVerificationResponse);
   rpc ResendAccountVerification(ResendAccountVerificationRequest) returns (ResendAccountVerificationResponse);
+  rpc Refresh(RefreshRequest) returns (RefreshResponse);
 }
 
 message RegisterRequest {
@@ -127,10 +128,13 @@ message LoginTwoFactorResponse {
 
 message AccountVerificationRequest {
   string session = 1 [(buf.validate.field).required = true];
-  string code = 2 [(buf.validate.field).string = {
-    len: 8
-    pattern: "^[A-Z0-9]+$"
-  }];
+  string code = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      len: 8
+      pattern: "^[A-Z0-9]+$"
+    }
+  ];
 }
 
 message AccountVerificationResponse {
@@ -147,4 +151,12 @@ message ResendAccountVerificationRequest {
 
 message ResendAccountVerificationResponse {
   string session = 1;
+}
+
+message RefreshRequest {
+  string refresh = 1 [(buf.validate.field).required = true];
+}
+
+message RefreshResponse {
+  Token token = 1;
 }
