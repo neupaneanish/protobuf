@@ -41,8 +41,8 @@ This matrix tracks the structural schema completion for external edges, internal
     - [X] `Create` | `Get` | `Update` | `Delete` | `List`
 - [X] **Education**
     - [X] `Create` | `Get` | `Update` | `Delete` | `List`
-- [ ] **Experience**
-    - [ ] `Create` | `Get` | `Update` | `Delete` | `List`
+- [X] **Experience**
+    - [X] `Create` | `Get` | `Update` | `Delete` | `List`
 - [ ] **Profile**
     - [ ] `Create` | `Get` | `Update`
 
