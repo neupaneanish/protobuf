@@ -53,7 +53,7 @@ This matrix tracks the structural schema completion for external edges, internal
 ### Root / Admin
 
 - [ ] **Root**
-    - [ ] `Platform`
+    - [X] `Platform`
 
 ---
 

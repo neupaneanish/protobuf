@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+package root.platform.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+service PlatformService {
+  rpc Create(CreateRequest) returns (CreateResponse);
+  rpc Get(GetRequest) returns (GetResponse);
+  rpc Update(UpdateRequest) returns (UpdateResponse);
+  rpc Delete(DeleteRequest) returns (DeleteResponse);
+  rpc List(ListRequest) returns (ListResponse);
+}
+
+message CreateRequest {
+  string name = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 1
+      max_len: 24
+    }
+  ];
+  string url = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {uri: true}
+  ];
+  string logo_url = 3 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {uri: true}
+  ];
+  string color = 4 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      len: 7
+      pattern: "^#[0-9a-fA-F]{6}$"
+    }
+  ];
+}
+
+message CreateResponse {
+  Platform platform = 1;
+}
+
+message GetRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message GetResponse {
+  Platform platform = 1;
+}
+
+message UpdateRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  optional string name = 2 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 24
+  }];
+  optional string url = 3 [(buf.validate.field).string = {uri: true}];
+  optional string logo_url = 4 [(buf.validate.field).string = {uri: true}];
+  optional string color = 5 [(buf.validate.field).string = {
+    len: 7
+    pattern: "^#[0-9a-fA-F]{6}$"
+  }];
+  google.protobuf.Timestamp updated_at = 6 [(buf.validate.field).required = true];
+  google.protobuf.FieldMask update_mask = 7 [(buf.validate.field).required = true];
+}
+
+message UpdateResponse {
+  Platform platform = 1;
+}
+
+message DeleteRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
+}
+
+message DeleteResponse {}
+
+message ListRequest {}
+
+message ListResponse {
+  repeated Platform platforms = 1;
+}
+
+message Platform {
+  string id = 1;
+  string name = 2;
+  string url = 3;
+  string logo_url = 4;
+  string color = 5;
+  google.protobuf.Timestamp created_at = 6;
+  string created_by = 7;
+  google.protobuf.Timestamp updated_at = 8;
+  string updated_by = 9;
+}
