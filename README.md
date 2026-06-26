@@ -35,12 +35,12 @@ This matrix tracks the structural schema completion for external edges, internal
     - [x] `ConfirmTwoFactor`
     - [x] `DeleteTwoFactor`
     - [x] `ConfirmDeleteTwoFactor`
-- [ ] **About**
+- [X] **About**
     - [X] `Create` | `Get` | `Update`
-- [ ] **Domain**
-    - [ ] `Create` | `Get` | `Update` | `Delete` | `List`
-- [ ] **Education**
-    - [ ] `Create` | `Get` | `Update` | `Delete` | `List`
+- [X] **Domain**
+    - [X] `Create` | `Get` | `Update` | `Delete` | `List`
+- [X] **Education**
+    - [X] `Create` | `Get` | `Update` | `Delete` | `List`
 - [ ] **Experience**
     - [ ] `Create` | `Get` | `Update` | `Delete` | `List`
 - [ ] **Profile**
