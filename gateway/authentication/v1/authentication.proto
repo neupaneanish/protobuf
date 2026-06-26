@@ -2,8 +2,8 @@ syntax = "proto3";
 
 package gateway.authentication.v1;
 
-import "common/password/v1/password.proto";
 import "buf/validate/validate.proto";
+import "common/password/v1/password.proto";
 
 service AuthenticationService {
   rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
@@ -26,10 +26,13 @@ message ChangePasswordResponse {
 
 message VerifyChangePasswordRequest {
   string session = 1 [(buf.validate.field).required = true];
-  string code = 2 [(buf.validate.field).required = true, (buf.validate.field).string = {
-    len: 8
-    pattern: "^[A-Z0-9]+$"
-  }];
+  string code = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      len: 8
+      pattern: "^[A-Z0-9]+$"
+    }
+  ];
 }
 
 message VerifyChangePasswordResponse {
@@ -60,10 +63,13 @@ message EnableTwoFactorResponse {
 
 message VerifyTwoFactorRequest {
   string session = 1 [(buf.validate.field).required = true];
-  string code = 2 [(buf.validate.field).required = true, (buf.validate.field).string = {
-    len: 8
-    pattern: "^[A-Z0-9]+$"
-  }];
+  string code = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      len: 8
+      pattern: "^[A-Z0-9]+$"
+    }
+  ];
 }
 
 message VerifyTwoFactorResponse {
@@ -74,10 +80,13 @@ message VerifyTwoFactorResponse {
 
 message ConfirmTwoFactorRequest {
   string session = 1 [(buf.validate.field).required = true];
-  string code = 2 [(buf.validate.field).required = true, (buf.validate.field).string = {
-    len: 6
-    pattern: "^[0-9]+$"
-  }];
+  string code = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      len: 6
+      pattern: "^[0-9]+$"
+    }
+  ];
 }
 
 message ConfirmTwoFactorResponse {

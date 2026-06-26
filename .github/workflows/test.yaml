@@ -29,5 +29,8 @@ jobs:
         with:
           setup_only: true
 
+      - name: Run Buf Format
+        run: buf format -w
+        
       - name: Run Buf Lint
         run: buf lint
