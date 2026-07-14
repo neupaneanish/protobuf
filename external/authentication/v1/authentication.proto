@@ -14,7 +14,7 @@ service AuthenticationService {
   rpc Verification(VerificationRequest) returns (VerificationResponse);
   rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
   rpc AccountVerification(AccountVerificationRequest) returns (AccountVerificationResponse);
-  rpc ResendAccountVerification(ResendAccountVerificationRequest) returns (ResendAccountVerificationResponse);
+  rpc Resend(ResendRequest) returns (ResendResponse);
   rpc Refresh(RefreshRequest) returns (RefreshResponse);
 }
 
@@ -145,11 +145,11 @@ message AccountVerificationResponse {
   }
 }
 
-message ResendAccountVerificationRequest {
+message ResendRequest {
   string session = 1 [(buf.validate.field).required = true];
 }
 
-message ResendAccountVerificationResponse {
+message ResendResponse {
   string session = 1;
 }
 
