@@ -6,7 +6,7 @@ import "buf/validate/validate.proto";
 import "common/password/v1/password.proto";
 import "google/protobuf/timestamp.proto";
 
-service AuthenticationService {
+service ExternalAuthenticationService {
   rpc Register(RegisterRequest) returns (RegisterResponse);
   rpc Login(LoginRequest) returns (LoginResponse);
   rpc LoginTwoFactor(LoginTwoFactorRequest) returns (LoginTwoFactorResponse);
