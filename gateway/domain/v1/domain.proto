@@ -4,7 +4,6 @@ package gateway.domain.v1;
 
 import "buf/validate/validate.proto";
 import "google/protobuf/timestamp.proto";
-import "google/protobuf/wrappers.proto";
 
 service DomainService {
   rpc Create(CreateRequest) returns (CreateResponse);
