@@ -5,7 +5,7 @@ package gateway.authentication.v1;
 import "buf/validate/validate.proto";
 import "common/password/v1/password.proto";
 
-service AuthenticationService {
+service GatewayAuthenticationService {
   rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
   rpc VerifyChangePassword(VerifyChangePasswordRequest) returns (VerifyChangePasswordResponse);
   rpc ConfirmChangePassword(ConfirmChangePasswordRequest) returns (ConfirmChangePasswordResponse);

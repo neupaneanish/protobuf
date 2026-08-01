@@ -3,7 +3,6 @@ syntax = "proto3";
 package gateway.social.v1;
 
 import "buf/validate/validate.proto";
-import "google/protobuf/field_mask.proto";
 import "google/protobuf/timestamp.proto";
 
 service SocialService {
