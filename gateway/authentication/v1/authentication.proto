@@ -4,42 +4,63 @@ package gateway.authentication.v1;
 
 import "buf/validate/validate.proto";
 import "common/password/v1/password.proto";
+import "google/protobuf/timestamp.proto";
 
 service GatewayAuthenticationService {
+  rpc PasswordVerification(PasswordVerificationRequest) returns (PasswordVerificationResponse);
+  rpc PasswordSessionVerification(PasswordSessionVerificationRequest) returns (PasswordSessionVerificationResponse);
+
   rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
-  rpc VerifyChangePassword(VerifyChangePasswordRequest) returns (VerifyChangePasswordResponse);
-  rpc ConfirmChangePassword(ConfirmChangePasswordRequest) returns (ConfirmChangePasswordResponse);
+
   rpc EnableTwoFactor(EnableTwoFactorRequest) returns (EnableTwoFactorResponse);
-  rpc VerifyTwoFactor(VerifyTwoFactorRequest) returns (VerifyTwoFactorResponse);
   rpc ConfirmTwoFactor(ConfirmTwoFactorRequest) returns (ConfirmTwoFactorResponse);
-  rpc DeleteTwoFactor(DeleteTwoFactorRequest) returns (DeleteTwoFactorResponse);
-  rpc ConfirmDeleteTwoFactor(ConfirmDeleteTwoFactorRequest) returns (ConfirmDeleteTwoFactorResponse);
+
+  rpc Role(RoleRequest) returns (RoleResponse);
+
+  rpc Profile(ProfileRequest) returns (ProfileResponse);
+
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
+}
+
+enum PasswordVerificationMethod {
+  PASSWORD_VERIFICATION_METHOD_UNSPECIFIED = 0;
+  PASSWORD_VERIFICATION_METHOD_CHANGE = 1;
+  PASSWORD_VERIFICATION_METHOD_ENABLED = 2;
+  PASSWORD_VERIFICATION_METHOD_DISABLED = 3;
+}
+
+message PasswordVerificationRequest {
+  common.password.v1.Password password = 1 [(buf.validate.field).required = true];
+  PasswordVerificationMethod method = 2 [(buf.validate.field).required = true];
+}
+
+message PasswordVerificationResponse {
+  string session = 1;
+}
+
+message PasswordSessionVerificationRequest {
+  string session = 1 [(buf.validate.field).required = true];
+  oneof code {
+    string totp = 2 [(buf.validate.field).string = {
+      len: 6
+      pattern: "^[0-9]+$"
+    }];
+    string email = 3 [(buf.validate.field).string = {
+      len: 8
+      pattern: "^[A-Z0-9]+$"
+    }];
+    string recovery = 4 [(buf.validate.field).string = {
+      len: 10
+      pattern: "^[A-Z0-9]+$"
+    }];
+  }
+}
+
+message PasswordSessionVerificationResponse {
+  string session = 1;
 }
 
 message ChangePasswordRequest {
-  common.password.v1.Password password = 1 [(buf.validate.field).required = true];
-}
-
-message ChangePasswordResponse {
-  string session = 1;
-}
-
-message VerifyChangePasswordRequest {
-  string session = 1 [(buf.validate.field).required = true];
-  string code = 2 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      len: 8
-      pattern: "^[A-Z0-9]+$"
-    }
-  ];
-}
-
-message VerifyChangePasswordResponse {
-  string session = 1;
-}
-
-message ConfirmChangePasswordRequest {
   string session = 1 [(buf.validate.field).required = true];
   common.password.v1.Password password = 2 [(buf.validate.field).required = true];
   common.password.v1.Password confirm_password = 3 [(buf.validate.field).required = true];
@@ -51,17 +72,9 @@ message ConfirmChangePasswordRequest {
   };
 }
 
-message ConfirmChangePasswordResponse {}
+message ChangePasswordResponse {}
 
 message EnableTwoFactorRequest {
-  common.password.v1.Password password = 1 [(buf.validate.field).required = true];
-}
-
-message EnableTwoFactorResponse {
-  string session = 1;
-}
-
-message VerifyTwoFactorRequest {
   string session = 1 [(buf.validate.field).required = true];
   string code = 2 [
     (buf.validate.field).required = true,
@@ -72,7 +85,7 @@ message VerifyTwoFactorRequest {
   ];
 }
 
-message VerifyTwoFactorResponse {
+message EnableTwoFactorResponse {
   string session = 1;
   string uri = 2;
   string key = 3;
@@ -93,26 +106,24 @@ message ConfirmTwoFactorResponse {
   repeated string codes = 1;
 }
 
-message DeleteTwoFactorRequest {
-  common.password.v1.Password password = 1 [(buf.validate.field).required = true];
+message RoleRequest {}
+
+message RoleResponse {
+  string role = 1;
 }
 
-message DeleteTwoFactorResponse {
-  string session = 1;
+message ProfileRequest {}
+
+message ProfileResponse {
+  string email = 1;
+  string username = 2;
+  string phone = 3;
+  string status = 4;
+  bool two_factor_enabled = 5;
+  google.protobuf.Timestamp last_password_changed_at = 6;
+  google.protobuf.Timestamp account_created_at = 7;
 }
 
-message ConfirmDeleteTwoFactorRequest {
-  string session = 1 [(buf.validate.field).required = true];
-  oneof code {
-    string totp = 2 [(buf.validate.field).string = {
-      len: 6
-      pattern: "^[0-9]+$"
-    }];
-    string recovery = 3 [(buf.validate.field).string = {
-      len: 10
-      pattern: "^[A-Z0-9]+$"
-    }];
-  }
-}
+message LogoutRequest {}
 
-message ConfirmDeleteTwoFactorResponse {}
+message LogoutResponse {}
