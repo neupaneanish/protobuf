@@ -26,15 +26,15 @@ This matrix tracks the structural schema completion for external edges, internal
 
 ### Internal Gateway
 
-- [ ] **Account Management**
+- [x] **Account Management**
+    - [x] `PasswordVerification`
+    - [x] `PasswordSessionVerification`
     - [x] `ChangePassword`
-    - [x] `VerifyChangePassword`
-    - [x] `ConfirmChangePassword`
     - [x] `EnableTwoFactor`
-    - [x] `VerifyTwoFactor`
     - [x] `ConfirmTwoFactor`
-    - [x] `DeleteTwoFactor`
-    - [x] `ConfirmDeleteTwoFactor`
+    - [x] `Role`
+    - [x] `Profile`
+    - [x] `Logout`
 - [X] **About**
     - [X] `Create` | `Get` | `Update`
 - [X] **Domain**
