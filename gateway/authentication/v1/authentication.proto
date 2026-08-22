@@ -11,8 +11,6 @@ service GatewayAuthenticationService {
   rpc PasswordSessionVerification(PasswordSessionVerificationRequest) returns (PasswordSessionVerificationResponse);
 
   rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
-
-  rpc EnableTwoFactor(EnableTwoFactorRequest) returns (EnableTwoFactorResponse);
   rpc ConfirmTwoFactor(ConfirmTwoFactorRequest) returns (ConfirmTwoFactorResponse);
 
   rpc Role(RoleRequest) returns (RoleResponse);
@@ -57,7 +55,11 @@ message PasswordSessionVerificationRequest {
 }
 
 message PasswordSessionVerificationResponse {
-  string session = 1;
+  oneof response {
+    string change_password = 1;
+    EnableTwoFactor enable_two_factor = 2;
+    bool disabled_two_factor = 3;
+  }
 }
 
 message ChangePasswordRequest {
@@ -73,23 +75,6 @@ message ChangePasswordRequest {
 }
 
 message ChangePasswordResponse {}
-
-message EnableTwoFactorRequest {
-  string session = 1 [(buf.validate.field).required = true];
-  string code = 2 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      len: 8
-      pattern: "^[A-Z0-9]+$"
-    }
-  ];
-}
-
-message EnableTwoFactorResponse {
-  string session = 1;
-  string uri = 2;
-  string key = 3;
-}
 
 message ConfirmTwoFactorRequest {
   string session = 1 [(buf.validate.field).required = true];
@@ -127,3 +112,9 @@ message ProfileResponse {
 message LogoutRequest {}
 
 message LogoutResponse {}
+
+message EnableTwoFactor {
+  string session = 1;
+  string uri = 2;
+  string key = 3;
+}
