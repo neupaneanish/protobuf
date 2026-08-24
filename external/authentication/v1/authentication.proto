@@ -6,14 +6,20 @@ import "buf/validate/validate.proto";
 import "common/password/v1/password.proto";
 import "google/protobuf/timestamp.proto";
 
+enum VerificationMethod {
+  VERIFICATION_METHOD_UNSPECIFIED = 0;
+  VERIFICATION_METHOD_ACCOUNT = 1;
+  VERIFICATION_METHOD_EMAIL = 2;
+  VERIFICATION_METHOD_TWO_FACTOR = 3;
+  VERIFICATION_METHOD_RESET = 4;
+}
+
 service ExternalAuthenticationService {
   rpc Register(RegisterRequest) returns (RegisterResponse);
   rpc Login(LoginRequest) returns (LoginResponse);
-  rpc LoginTwoFactor(LoginTwoFactorRequest) returns (LoginTwoFactorResponse);
   rpc ForgetPassword(ForgetPasswordRequest) returns (ForgetPasswordResponse);
   rpc Verification(VerificationRequest) returns (VerificationResponse);
   rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
-  rpc AccountVerification(AccountVerificationRequest) returns (AccountVerificationResponse);
   rpc Resend(ResendRequest) returns (ResendResponse);
   rpc Refresh(RefreshRequest) returns (RefreshResponse);
 }
@@ -55,9 +61,8 @@ message LoginRequest {
 
 message LoginResponse {
   oneof response {
-    string totp = 1;
-    Token token = 2;
-    string verification = 3;
+    Token token = 1;
+    VerificationSession verification = 2;
   }
 }
 
@@ -75,22 +80,35 @@ message ForgetPasswordRequest {
 }
 
 message ForgetPasswordResponse {
-  oneof response {
-    string session = 1;
-    string verification = 2;
-  }
+  VerificationSession verification = 1;
 }
 
 message VerificationRequest {
   string session = 1 [(buf.validate.field).required = true];
-  string code = 2 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string.len = 8
-  ];
+  oneof code {
+    option (buf.validate.oneof).required = true;
+
+    string totp = 2 [(buf.validate.field).string = {
+      len: 6
+      pattern: "^[0-9]+$"
+    }];
+    string email = 3 [(buf.validate.field).string = {
+      len: 8
+      pattern: "^[A-Z0-9]+$"
+    }];
+    string recovery = 4 [(buf.validate.field).string = {
+      len: 10
+      pattern: "^[A-Z0-9]+$"
+    }];
+  }
 }
 
 message VerificationResponse {
-  string session = 1;
+  oneof response {
+    Token token = 1;
+    VerificationSession verification = 2;
+    ResetSession reset = 3;
+  }
 }
 
 message ResetPasswordRequest {
@@ -99,51 +117,13 @@ message ResetPasswordRequest {
   common.password.v1.Password confirm_password = 3 [(buf.validate.field).required = true];
 
   option (buf.validate.message).cel = {
-    id: "password_miss_match"
+    id: "password_mismatch"
     expression: "this.password.value == this.confirm_password.value"
     message: "Password and confirm password must match"
   };
 }
 
 message ResetPasswordResponse {}
-
-message LoginTwoFactorRequest {
-  string session = 1 [(buf.validate.field).required = true];
-
-  oneof code {
-    string totp = 2 [
-      (buf.validate.field).string.len = 6,
-      (buf.validate.field).string.pattern = "^[0-9]+$"
-    ];
-    string recovery = 3 [
-      (buf.validate.field).string.len = 10,
-      (buf.validate.field).string.pattern = "^[A-Z0-9]+$"
-    ];
-  }
-}
-
-message LoginTwoFactorResponse {
-  Token token = 1;
-}
-
-message AccountVerificationRequest {
-  string session = 1 [(buf.validate.field).required = true];
-  string code = 2 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      len: 8
-      pattern: "^[A-Z0-9]+$"
-    }
-  ];
-}
-
-message AccountVerificationResponse {
-  oneof response {
-    string totp_session = 1;
-    Token token = 2;
-    string reset_session = 3;
-  }
-}
 
 message ResendRequest {
   string session = 1 [(buf.validate.field).required = true];
@@ -159,4 +139,13 @@ message RefreshRequest {
 
 message RefreshResponse {
   Token token = 1;
+}
+
+message VerificationSession {
+  string session = 1;
+  VerificationMethod method = 2;
+}
+
+message ResetSession {
+  string session = 1;
 }
