@@ -9,6 +9,7 @@ import "google/protobuf/timestamp.proto";
 service GatewayAuthenticationService {
   rpc PasswordVerification(PasswordVerificationRequest) returns (PasswordVerificationResponse);
   rpc PasswordSessionVerification(PasswordSessionVerificationRequest) returns (PasswordSessionVerificationResponse);
+  rpc Resend(ResendRequest) returns (ResendResponse);
 
   rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
   rpc ConfirmTwoFactor(ConfirmTwoFactorRequest) returns (ConfirmTwoFactorResponse);
@@ -18,6 +19,7 @@ service GatewayAuthenticationService {
   rpc Profile(ProfileRequest) returns (ProfileResponse);
 
   rpc Logout(LogoutRequest) returns (LogoutResponse);
+  rpc LogoutAll(LogoutAllRequest) returns (LogoutAllResponse);
 }
 
 enum PasswordVerificationMethod {
@@ -39,6 +41,8 @@ message PasswordVerificationResponse {
 message PasswordSessionVerificationRequest {
   string session = 1 [(buf.validate.field).required = true];
   oneof code {
+    option (buf.validate.oneof).required = true;
+
     string totp = 2 [(buf.validate.field).string = {
       len: 6
       pattern: "^[0-9]+$"
@@ -113,8 +117,19 @@ message LogoutRequest {}
 
 message LogoutResponse {}
 
+message LogoutAllRequest {}
+
+message LogoutAllResponse {}
+
 message EnableTwoFactor {
   string session = 1;
   string uri = 2;
   string key = 3;
+}
+
+message ResendRequest {
+  string session = 1 [(buf.validate.field).required = true];
+}
+message ResendResponse {
+  string session = 1;
 }
