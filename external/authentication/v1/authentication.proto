@@ -48,7 +48,7 @@ message RegisterRequest {
 }
 
 message RegisterResponse {
-  string session = 1;
+  VerificationSession verification = 1;
 }
 
 message LoginRequest {
