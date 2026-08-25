@@ -107,7 +107,7 @@ message VerificationResponse {
   oneof response {
     Token token = 1;
     VerificationSession verification = 2;
-    ResetSession reset = 3;
+    ResetSession reset_session = 3;
   }
 }
 
