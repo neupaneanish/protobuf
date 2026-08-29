@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package root.authentication.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+
+service RootAuthenticationService {
+  rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleResponse);
+  rpc UpdateStatus(UpdateStatusRequest) returns (UpdateStatusResponse);
+  rpc User(UserRequest) returns (UserResponse);
+  rpc Users(UsersRequest) returns (UsersResponse);
+}
+
+message UpdateRoleRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  string role = 2 [(buf.validate.field).required = true];
+  google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
+}
+
+message UpdateRoleResponse {
+  string id = 1;
+  string role = 2;
+  google.protobuf.Timestamp updated_at = 3;
+  string updated_by = 4;
+}
+
+message UpdateStatusRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  string status = 2 [(buf.validate.field).required = true];
+  google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
+}
+
+message UpdateStatusResponse {
+  string id = 1;
+  string status = 2;
+  google.protobuf.Timestamp updated_at = 3;
+  string updated_by = 4;
+}
+
+message UsersRequest {}
+
+message UsersResponse {
+  repeated UserSummary users = 1;
+}
+
+message UserSummary {
+  string id = 1;
+  string username = 2;
+  string phone = 3;
+}
+
+message UserRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message UserResponse {
+  string id = 1;
+  string email = 2;
+  string username = 3;
+  string phone = 4;
+  string role = 5;
+  string status = 6;
+  bool email_verified = 7;
+  bool two_factor = 8;
+  google.protobuf.Timestamp last_password_updated_at = 9;
+  google.protobuf.Timestamp created_at = 10;
+  string created_by = 11;
+  google.protobuf.Timestamp updated_at = 12;
+  string updated_by = 13;
+}
