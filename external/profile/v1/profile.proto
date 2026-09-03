@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package external.profile.v1;
+
+import "common/profile/v1/profile.proto";
+
+service ExternalProfileService {
+  rpc Profile(ProfileRequest) returns (ProfileResponse);
+  rpc About(AboutRequest) returns (AboutResponse);
+  rpc Educations(EducationsRequest) returns (EducationsResponse);
+  rpc Experiences(ExperiencesRequest) returns (ExperiencesResponse);
+  rpc Socials(SocialsRequest) returns (SocialsResponse);
+}
+
+// Profile
+message ProfileRequest {}
+
+message ProfileResponse {
+  string name = 1;
+  string title = 2;
+}
+
+// About
+message AboutRequest {}
+
+message AboutResponse {
+  string about = 1;
+}
+
+// Education
+message EducationsRequest {}
+
+message EducationsResponse {
+  repeated common.profile.v1.Educations educations = 1;
+}
+
+// Experience
+message ExperiencesRequest {}
+
+message ExperiencesResponse {
+  repeated common.profile.v1.Experiences experiences = 1;
+}
+
+// Socials
+message SocialsRequest {}
+
+message SocialsResponse {
+  string id = 1;
+  string username = 2;
+  string name = 3;
+  string url = 4;
+  string logo_url = 5;
+  string color = 6;
+  string url_suffix = 7;
+}
