@@ -1,0 +1,319 @@
+syntax = "proto3";
+
+package root.profile.v1;
+
+import "buf/validate/validate.proto";
+import "common/profile/v1/profile.proto";
+import "google/protobuf/timestamp.proto";
+
+service RootProfileService {
+  // Profile
+  rpc Profile(ProfileRequest) returns (ProfileResponse);
+  rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse);
+
+  // About
+  rpc About(AboutRequest) returns (AboutResponse);
+  rpc UpdateAbout(UpdateAboutRequest) returns (UpdateAboutResponse);
+
+  // Domains
+  rpc Domains(DomainsRequest) returns (DomainsResponse);
+
+  // Educations
+  rpc Education(EducationRequest) returns (EducationResponse);
+  rpc UpdateEducation(UpdateEducationRequest) returns (UpdateEducationResponse);
+  rpc Educations(EducationsRequest) returns (EducationsResponse);
+
+  // Experience
+  rpc Experience(ExperienceRequest) returns (ExperienceResponse);
+  rpc UpdateExperience(UpdateExperienceRequest) returns (UpdateExperienceResponse);
+  rpc Experiences(ExperiencesRequest) returns (ExperiencesResponse);
+
+  // Platform
+  rpc Platforms(PlatformsRequest) returns (PlatformsResponse);
+  rpc Platform(PlatformRequest) returns (PlatformResponse);
+  rpc CreatePlatform(CreatePlatformRequest) returns (CreatePlatformResponse);
+  rpc UpdatePlatform(UpdatePlatformRequest) returns (UpdatePlatformResponse);
+  rpc DeletePlatform(DeletePlatformRequest) returns (DeletePlatformResponse);
+
+  // Social
+  rpc UpdateSocial(UpdateSocialRequest) returns (UpdateSocialResponse);
+  rpc Socials(SocialsRequest) returns (SocialsResponse);
+}
+
+// Profile
+message ProfileRequest {
+  string user_id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message ProfileResponse {
+  common.profile.v1.Profile profile = 1;
+}
+
+message UpdateProfileRequest {
+  string user_id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  string name = 2 [(buf.validate.field).required = true];
+  string title = 3 [(buf.validate.field).required = true];
+  google.protobuf.Timestamp updated_at = 4 [(buf.validate.field).required = true];
+}
+
+message UpdateProfileResponse {
+  common.profile.v1.Profile profile = 1;
+}
+
+// About
+message AboutRequest {
+  string user_id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message AboutResponse {
+  common.profile.v1.About about = 1;
+}
+
+message UpdateAboutRequest {
+  string user_id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  string about = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {min_len: 20}
+  ];
+  google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
+}
+
+message UpdateAboutResponse {
+  common.profile.v1.About about = 1;
+}
+
+// Domain
+message DomainsRequest {
+  string user_id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message DomainsResponse {
+  repeated common.profile.v1.Domains domains = 1;
+}
+
+// Education
+message EducationRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  string user_id = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message EducationResponse {
+  common.profile.v1.Education education = 1;
+}
+
+message UpdateEducationRequest {
+  string user_id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  common.profile.v1.UpdateEducation education = 2 [(buf.validate.field).required = true];
+}
+
+message UpdateEducationResponse {
+  string id = 1;
+}
+
+message EducationsRequest {
+  string user_id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message EducationsResponse {
+  repeated common.profile.v1.Educations educations = 1;
+}
+
+// Experience
+message ExperienceRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  string user_id = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message ExperienceResponse {
+  common.profile.v1.Experience experience = 1;
+}
+
+message UpdateExperienceRequest {
+  string user_id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  common.profile.v1.UpdateExperience experience = 2 [(buf.validate.field).required = true];
+}
+
+message UpdateExperienceResponse {
+  string id = 1;
+}
+
+message ExperiencesRequest {
+  string user_id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message ExperiencesResponse {
+  repeated common.profile.v1.Experiences experiences = 1;
+}
+
+// Platform
+message PlatformsRequest {}
+
+message PlatformsResponse {
+  repeated common.profile.v1.Platforms platforms = 1;
+}
+
+message PlatformRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message PlatformResponse {
+  string id = 1;
+  string name = 2;
+  string url = 3;
+  string logo_url = 4;
+  string color = 5;
+  string url_suffix = 6;
+  google.protobuf.Timestamp created_at = 10;
+  string created_by = 11;
+  google.protobuf.Timestamp updated_at = 12;
+  string updated_by = 13;
+}
+
+message CreatePlatformRequest {
+  string name = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 1
+      max_len: 24
+    }
+  ];
+  string url = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {uri: true}
+  ];
+  string logo_url = 3 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {uri: true}
+  ];
+  string color = 4 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      len: 7
+      pattern: "^#[0-9a-fA-F]{6}$"
+    }
+  ];
+  string url_suffix = 5 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {uri: true}
+  ];
+}
+
+message CreatePlatformResponse {
+  string id = 1;
+}
+
+message UpdatePlatformRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  string name = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 1
+      max_len: 24
+    }
+  ];
+  string url = 3 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {uri: true}
+  ];
+  string logo_url = 4 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {uri: true}
+  ];
+  string color = 5 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      len: 7
+      pattern: "^#[0-9a-fA-F]{6}$"
+    }
+  ];
+  string url_suffix = 6 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      pattern: "^\\/([a-z0-9_@.~-]+\\/)*$"
+    }
+  ];
+  google.protobuf.Timestamp updated_at = 7 [(buf.validate.field).required = true];
+}
+
+message UpdatePlatformResponse {
+  string id = 1;
+}
+
+message DeletePlatformRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
+}
+
+message DeletePlatformResponse {}
+
+// Social
+message UpdateSocialRequest {
+  string user_id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  common.profile.v1.UpdateSocial social = 2 [(buf.validate.field).required = true];
+}
+
+message UpdateSocialResponse {
+  string id = 1;
+}
+
+message SocialsRequest {
+  string user_id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message SocialsResponse {
+  repeated common.profile.v1.Socials socials = 1;
+}

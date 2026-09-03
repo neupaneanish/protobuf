@@ -3,16 +3,53 @@ syntax = "proto3";
 package gateway.profile.v1;
 
 import "buf/validate/validate.proto";
+import "common/profile/v1/profile.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
-service ProfileService {
-  rpc Create(CreateRequest) returns (CreateResponse);
-  rpc Get(GetRequest) returns (GetResponse);
-  rpc Update(UpdateRequest) returns (UpdateResponse);
+service GatewayProfileService {
+  //  Profile
+  rpc CreateProfile(CreateProfileRequest) returns (CreateProfileResponse);
+  rpc Profile(ProfileRequest) returns (ProfileResponse);
+  rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse);
+
+  // About
+  rpc CreateAbout(CreateAboutRequest) returns (CreateAboutResponse);
+  rpc About(AboutRequest) returns (AboutResponse);
+  rpc UpdateAbout(UpdateAboutRequest) returns (UpdateAboutResponse);
+
+  // Domain
+  rpc CreateDomain(CreateDomainRequest) returns (CreateDomainResponse);
+  rpc VerifyDomain(VerifyDomainRequest) returns (VerifyDomainResponse);
+  rpc DeleteDomain(DeleteDomainRequest) returns (DeleteDomainResponse);
+  rpc Domains(DomainsRequest) returns (DomainsResponse);
+
+  // Education
+  rpc CreateEducation(CreateEducationRequest) returns (CreateEducationResponse);
+  rpc Education(EducationRequest) returns (EducationResponse);
+  rpc UpdateEducation(UpdateEducationRequest) returns (UpdateEducationResponse);
+  rpc DeleteEducation(DeleteEducationRequest) returns (DeleteEducationResponse);
+  rpc Educations(EducationsRequest) returns (EducationsResponse);
+
+  // Experience
+  rpc CreateExperience(CreateExperienceRequest) returns (CreateExperienceResponse);
+  rpc Experience(ExperienceRequest) returns (ExperienceResponse);
+  rpc UpdateExperience(UpdateExperienceRequest) returns (UpdateExperienceResponse);
+  rpc DeleteExperience(DeleteExperienceRequest) returns (DeleteExperienceResponse);
+  rpc Experiences(ExperiencesRequest) returns (ExperiencesResponse);
+
+  // Platform
+  rpc Platforms(PlatformsRequest) returns (PlatformsResponse);
+
+  // Social
+  rpc CreateSocial(CreateSocialRequest) returns (CreateSocialResponse);
+  rpc UpdateSocial(UpdateSocialRequest) returns (UpdateSocialResponse);
+  rpc DeleteSocial(DeleteSocialRequest) returns (DeleteSocialResponse);
+  rpc Socials(SocialsRequest) returns (SocialsResponse);
 }
 
-message CreateRequest {
+// Profile
+message CreateProfileRequest {
   string name = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string = {
@@ -21,7 +58,7 @@ message CreateRequest {
       pattern: "^[a-zA-Z]+( [a-zA-Z]+)*$"
     }
   ];
-  google.protobuf.StringValue headline = 2;
+  string title = 2 [(buf.validate.field).required = true];
   google.protobuf.Timestamp dob = 3 [
     (buf.validate.field).required = true,
     (buf.validate.field).cel = {
@@ -32,30 +69,292 @@ message CreateRequest {
   ];
 }
 
-message CreateResponse {}
+message CreateProfileResponse {}
 
-message UpdateRequest {
-  google.protobuf.StringValue headline = 1;
+message ProfileRequest {}
+
+message ProfileResponse {
+  common.profile.v1.Profile profile = 1;
+}
+
+message UpdateProfileRequest {
+  string title = 1 [(buf.validate.field).required = true];
   google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
 }
 
-message UpdateResponse {
-  Profile profile = 1;
+message UpdateProfileResponse {
+  common.profile.v1.Profile profile = 1;
 }
 
-message GetRequest {}
-
-message GetResponse {
-  Profile profile = 1;
+// About
+message CreateAboutRequest {
+  string about = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {min_len: 20}
+  ];
 }
 
-message Profile {
-  string user_id = 1;
-  string name = 2;
-  google.protobuf.StringValue heading = 3;
-  google.protobuf.Timestamp dob = 4;
-  google.protobuf.Timestamp created_at = 5;
-  string created_by = 6;
-  google.protobuf.Timestamp updated_at = 7;
-  string updated_by = 8;
+message CreateAboutResponse {
+  common.profile.v1.About about = 1;
+}
+
+message AboutRequest {}
+
+message AboutResponse {
+  common.profile.v1.About about = 1;
+}
+
+message UpdateAboutRequest {
+  string about = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {min_len: 20}
+  ];
+  google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
+}
+
+message UpdateAboutResponse {
+  common.profile.v1.About about = 1;
+}
+
+// Domain
+message CreateDomainRequest {
+  string url = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uri = true
+  ];
+}
+
+message CreateDomainResponse {}
+
+message VerifyDomainRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
+}
+
+message VerifyDomainResponse {
+  string id = 1;
+}
+
+message DeleteDomainRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
+}
+
+message DeleteDomainResponse {}
+
+message DomainsRequest {}
+
+message DomainsResponse {
+  repeated common.profile.v1.Domains domains = 1;
+}
+
+// Education
+message CreateEducationRequest {
+  string school = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 5
+      max_len: 64
+    }
+  ];
+  string degree = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 5
+      max_len: 64
+    }
+  ];
+  google.protobuf.StringValue affiliation = 3;
+  google.protobuf.StringValue field_of_study = 4;
+  google.protobuf.StringValue concentration = 5;
+  google.protobuf.Timestamp start_date = 6 [(buf.validate.field).required = true];
+  google.protobuf.Timestamp end_date = 7;
+  string address = 8 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 5
+      max_len: 64
+    }
+  ];
+  google.protobuf.StringValue description = 9;
+
+  option (buf.validate.message).cel = {
+    id: "education_dates"
+    message: "End date cannot be in the future and must be after the start date."
+    expression: "!has(this.end_date) || (this.end_date <= now && this.end_date > this.start_date)"
+  };
+}
+
+message CreateEducationResponse {
+  string id = 1;
+}
+
+message EducationRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message EducationResponse {
+  common.profile.v1.Education education = 1;
+}
+
+message DeleteEducationRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
+}
+
+message DeleteEducationResponse {}
+
+message EducationsRequest {}
+
+message EducationsResponse {
+  repeated common.profile.v1.Educations educations = 1;
+}
+
+message UpdateEducationRequest {
+  common.profile.v1.UpdateEducation education = 1 [(buf.validate.field).required = true];
+}
+
+message UpdateEducationResponse {
+  string id = 1;
+}
+
+// Experience
+message CreateExperienceRequest {
+  string title = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 5
+      max_len: 64
+    }
+  ];
+  string company_name = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 5
+      max_len: 64
+    }
+  ];
+  string location = 3 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 5
+      max_len: 64
+    }
+  ];
+  string location_type = 4 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.in = "onsite",
+    (buf.validate.field).string.in = "hybrid",
+    (buf.validate.field).string.in = "remote"
+  ];
+  google.protobuf.Timestamp start_date = 5 [(buf.validate.field).required = true];
+  google.protobuf.Timestamp end_date = 6;
+  google.protobuf.StringValue description = 7;
+
+  option (buf.validate.message).cel = {
+    id: "experience_dates"
+    message: "End date cannot be in the future and must be after the start date."
+    expression: "!has(this.end_date) || (this.end_date <= now && this.end_date > this.start_date)"
+  };
+}
+
+message CreateExperienceResponse {
+  string id = 1;
+}
+
+message ExperienceRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message ExperienceResponse {
+  common.profile.v1.Experience experience = 1;
+}
+
+message UpdateExperienceRequest {
+  common.profile.v1.UpdateExperience experience = 1 [(buf.validate.field).required = true];
+}
+
+message UpdateExperienceResponse {
+  string id = 1;
+}
+
+message DeleteExperienceRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
+}
+message DeleteExperienceResponse {}
+
+message ExperiencesRequest {}
+
+message ExperiencesResponse {
+  repeated common.profile.v1.Experiences experiences = 1;
+}
+
+// Platform
+message PlatformsRequest {}
+
+message PlatformsResponse {
+  repeated common.profile.v1.Platforms platforms = 1;
+}
+
+// Social
+message CreateSocialRequest {
+  string platform_id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  string username = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 5
+      max_len: 64
+      pattern: "^[a-z0-9]+([._-][a-z0-9]+)*$"
+    }
+  ];
+}
+
+message CreateSocialResponse {
+  string id = 1;
+}
+
+message UpdateSocialRequest {
+  common.profile.v1.UpdateSocial social = 1 [(buf.validate.field).required = true];
+}
+
+message UpdateSocialResponse {
+  string id = 1;
+}
+
+message DeleteSocialRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
+}
+
+message DeleteSocialResponse {}
+
+message SocialsRequest {}
+
+message SocialsResponse {
+  repeated common.profile.v1.Socials socials = 1;
 }
