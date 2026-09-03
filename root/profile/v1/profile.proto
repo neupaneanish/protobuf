@@ -57,9 +57,7 @@ message UpdateProfileRequest {
     (buf.validate.field).required = true,
     (buf.validate.field).string.uuid = true
   ];
-  string name = 2 [(buf.validate.field).required = true];
-  string title = 3 [(buf.validate.field).required = true];
-  google.protobuf.Timestamp updated_at = 4 [(buf.validate.field).required = true];
+  common.profile.v1.UpdateProfile profile = 2 [(buf.validate.field).required = true];
 }
 
 message UpdateProfileResponse {
@@ -83,11 +81,7 @@ message UpdateAboutRequest {
     (buf.validate.field).required = true,
     (buf.validate.field).string.uuid = true
   ];
-  string about = 2 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {min_len: 20}
-  ];
-  google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
+  common.profile.v1.UpdateAbout about = 2 [(buf.validate.field).required = true];
 }
 
 message UpdateAboutResponse {
@@ -273,9 +267,7 @@ message UpdatePlatformRequest {
   ];
   string url_suffix = 6 [
     (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      pattern: "^\\/([a-z0-9_@.~-]+\\/)*$"
-    }
+    (buf.validate.field).string = {pattern: "^\\/([a-z0-9_@.~-]+\\/)*$"}
   ];
   google.protobuf.Timestamp updated_at = 7 [(buf.validate.field).required = true];
 }

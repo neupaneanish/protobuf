@@ -58,7 +58,13 @@ message CreateProfileRequest {
       pattern: "^[a-zA-Z]+( [a-zA-Z]+)*$"
     }
   ];
-  string title = 2 [(buf.validate.field).required = true];
+  string title = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 5
+      max_len: 64
+    }
+  ];
   google.protobuf.Timestamp dob = 3 [
     (buf.validate.field).required = true,
     (buf.validate.field).cel = {
@@ -78,8 +84,7 @@ message ProfileResponse {
 }
 
 message UpdateProfileRequest {
-  string title = 1 [(buf.validate.field).required = true];
-  google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
+  common.profile.v1.UpdateProfile profile = 1 [(buf.validate.field).required = true];
 }
 
 message UpdateProfileResponse {
@@ -105,11 +110,7 @@ message AboutResponse {
 }
 
 message UpdateAboutRequest {
-  string about = 1 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {min_len: 20}
-  ];
-  google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
+  common.profile.v1.UpdateAbout about = 1 [(buf.validate.field).required = true];
 }
 
 message UpdateAboutResponse {
