@@ -17,6 +17,25 @@ message Profile {
   string updated_by = 8;
 }
 
+message UpdateProfile {
+  string name = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 5
+      max_len: 24
+      pattern: "^[a-zA-Z]+( [a-zA-Z]+)*$"
+    }
+  ];
+  string title = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 5
+      max_len: 64
+    }
+  ];
+  google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
+}
+
 message About {
   string user_id = 1;
   string about = 2;
@@ -24,6 +43,14 @@ message About {
   string created_by = 4;
   google.protobuf.Timestamp updated_at = 5;
   string updated_by = 6;
+}
+
+message UpdateAbout {
+  string about = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {min_len: 20}
+  ];
+  google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
 }
 
 message Domains {
