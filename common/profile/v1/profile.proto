@@ -17,7 +17,7 @@ message Profile {
   string updated_by = 8;
 }
 
-message UpdateProfile {
+message CreateUpdateProfile {
   string name = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string = {
@@ -33,7 +33,6 @@ message UpdateProfile {
       max_len: 64
     }
   ];
-  google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
 }
 
 message About {
@@ -45,24 +44,53 @@ message About {
   string updated_by = 6;
 }
 
-message UpdateAbout {
-  string about = 1 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {min_len: 20}
-  ];
-  google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
-}
-
 message Domains {
   string id = 1;
   string user_id = 2;
-  string url = 3;
-  string txt = 4;
-  bool verified = 5;
+  string name_server = 3;
+  string fqdn = 4;
+  string txt = 5;
+  bool verified = 6;
   google.protobuf.Timestamp created_at = 7;
   string created_by = 8;
   google.protobuf.Timestamp updated_at = 9;
   string updated_by = 10;
+}
+
+message CreateUpdateEducation {
+  string school = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 5
+      max_len: 64
+    }
+  ];
+  string degree = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 5
+      max_len: 64
+    }
+  ];
+  google.protobuf.StringValue affiliation = 3;
+  google.protobuf.StringValue field_of_study = 4;
+  google.protobuf.StringValue concentration = 5;
+  google.protobuf.Timestamp start_date = 6 [(buf.validate.field).required = true];
+  google.protobuf.Timestamp end_date = 7;
+  string address = 8 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 5
+      max_len: 64
+    }
+  ];
+  google.protobuf.StringValue description = 9;
+
+  option (buf.validate.message).cel = {
+    id: "education_dates"
+    message: "End date cannot be in the future and must be after the start date."
+    expression: "!has(this.end_date) || (this.end_date <= now && this.end_date > this.start_date)"
+  };
 }
 
 message Education {
@@ -92,47 +120,6 @@ message Educations {
   google.protobuf.Timestamp end_date = 6;
 }
 
-message UpdateEducation {
-  string id = 1 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string.uuid = true
-  ];
-  string school = 2 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      min_len: 5
-      max_len: 128
-    }
-  ];
-  string degree = 3 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      min_len: 5
-      max_len: 128
-    }
-  ];
-  google.protobuf.StringValue affiliation = 4;
-  google.protobuf.StringValue field_of_study = 5;
-  google.protobuf.StringValue concentration = 6;
-  google.protobuf.Timestamp start_date = 7 [(buf.validate.field).required = true];
-  google.protobuf.Timestamp end_date = 8;
-  string address = 9 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      min_len: 5
-      max_len: 128
-    }
-  ];
-  google.protobuf.StringValue description = 10;
-  google.protobuf.Timestamp updated_at = 11 [(buf.validate.field).required = true];
-
-  option (buf.validate.message).cel = {
-    id: "education_dates"
-    message: "End date cannot be in the future and must be after the start date."
-    expression: "!has(this.end_date) || (this.end_date <= now && this.end_date > this.start_date)"
-  };
-}
-
 message Experiences {
   string id = 1;
   string user_id = 2;
@@ -158,42 +145,37 @@ message Experience {
   string updated_by = 13;
 }
 
-message UpdateExperience {
-  string id = 1 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string.uuid = true
-  ];
-  string title = 2 [
+message CreateUpdateExperience {
+  string title = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string = {
       min_len: 5
       max_len: 64
     }
   ];
-  string company_name = 3 [
+  string company_name = 2 [
     (buf.validate.field).required = true,
     (buf.validate.field).string = {
       min_len: 5
       max_len: 64
     }
   ];
-  string location = 4 [
+  string location = 3 [
     (buf.validate.field).required = true,
     (buf.validate.field).string = {
       min_len: 5
       max_len: 64
     }
   ];
-  string location_type = 5 [
+  string location_type = 4 [
     (buf.validate.field).required = true,
     (buf.validate.field).string.in = "onsite",
     (buf.validate.field).string.in = "hybrid",
     (buf.validate.field).string.in = "remote"
   ];
-  google.protobuf.Timestamp start_date = 6 [(buf.validate.field).required = true];
-  google.protobuf.Timestamp end_date = 7;
-  google.protobuf.StringValue description = 8;
-  google.protobuf.Timestamp updated_at = 9 [(buf.validate.field).required = true];
+  google.protobuf.Timestamp start_date = 5 [(buf.validate.field).required = true];
+  google.protobuf.Timestamp end_date = 6;
+  google.protobuf.StringValue description = 7;
 
   option (buf.validate.message).cel = {
     id: "experience_dates"
@@ -225,20 +207,19 @@ message Socials {
   string username = 4;
   string name = 5;
   string url = 6;
-  string logo_url = 7;
+  string logo = 7;
   string color = 8;
-  string url_suffix = 9;
-  google.protobuf.Timestamp created_at = 10;
-  string created_by = 11;
-  google.protobuf.Timestamp updated_at = 12;
-  string updated_by = 13;
+  google.protobuf.Timestamp created_at = 9;
+  string created_by = 10;
+  google.protobuf.Timestamp updated_at = 11;
+  string updated_by = 12;
 }
 
 message Platforms {
   string id = 1;
   string name = 2;
   string url = 3;
-  string logo_url = 4;
-  string color = 5;
-  string url_suffix = 6;
+  string url_suffix = 4;
+  string logo = 5;
+  string color = 6;
 }
