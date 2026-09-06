@@ -17,6 +17,13 @@ service RootProfileService {
 
   // Domains
   rpc Domains(DomainsRequest) returns (DomainsResponse);
+  rpc CheckDomain(CheckDomainRequest) returns (CheckDomainResponse);
+
+  // NameServers
+  rpc NameServers(NameServersRequest) returns (NameServersResponse);
+  rpc CreateNameServer(CreateNameServerRequest) returns (CreateNameServerResponse);
+  rpc UpdateNameServer(UpdateNameServerRequest) returns (UpdateNameServerResponse);
+  rpc DeleteNameServer(DeleteNameServerRequest) returns (DeleteNameServerResponse);
 
   // Educations
   rpc Education(EducationRequest) returns (EducationResponse);
@@ -57,7 +64,8 @@ message UpdateProfileRequest {
     (buf.validate.field).required = true,
     (buf.validate.field).string.uuid = true
   ];
-  common.profile.v1.UpdateProfile profile = 2 [(buf.validate.field).required = true];
+  common.profile.v1.CreateUpdateProfile profile = 2 [(buf.validate.field).required = true];
+  google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
 }
 
 message UpdateProfileResponse {
@@ -81,7 +89,11 @@ message UpdateAboutRequest {
     (buf.validate.field).required = true,
     (buf.validate.field).string.uuid = true
   ];
-  common.profile.v1.UpdateAbout about = 2 [(buf.validate.field).required = true];
+  string about = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {min_len: 20}
+  ];
+  google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
 }
 
 message UpdateAboutResponse {
@@ -98,6 +110,23 @@ message DomainsRequest {
 
 message DomainsResponse {
   repeated common.profile.v1.Domains domains = 1;
+}
+
+message CheckDomainRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  string user_id = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  string txt = 3 [(buf.validate.field).required = true];
+  string dns = 4 [(buf.validate.field).required = true];
+}
+
+message CheckDomainResponse {
+  string id = 1;
 }
 
 // Education
@@ -117,11 +146,16 @@ message EducationResponse {
 }
 
 message UpdateEducationRequest {
-  string user_id = 1 [
+  string id = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string.uuid = true
   ];
-  common.profile.v1.UpdateEducation education = 2 [(buf.validate.field).required = true];
+  string user_id = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  common.profile.v1.CreateUpdateEducation education = 3 [(buf.validate.field).required = true];
+  google.protobuf.Timestamp updated_at = 4 [(buf.validate.field).required = true];
 }
 
 message UpdateEducationResponse {
@@ -156,11 +190,16 @@ message ExperienceResponse {
 }
 
 message UpdateExperienceRequest {
-  string user_id = 1 [
+  string id = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string.uuid = true
   ];
-  common.profile.v1.UpdateExperience experience = 2 [(buf.validate.field).required = true];
+  string user_id = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  common.profile.v1.CreateUpdateExperience experience = 3 [(buf.validate.field).required = true];
+  google.protobuf.Timestamp updated_at = 4 [(buf.validate.field).required = true];
 }
 
 message UpdateExperienceResponse {
@@ -196,42 +235,19 @@ message PlatformResponse {
   string id = 1;
   string name = 2;
   string url = 3;
-  string logo_url = 4;
-  string color = 5;
-  string url_suffix = 6;
-  google.protobuf.Timestamp created_at = 10;
-  string created_by = 11;
-  google.protobuf.Timestamp updated_at = 12;
-  string updated_by = 13;
+  string url_suffix = 4;
+  string logo_url = 5;
+  string logo_url_suffix = 6;
+  string logo_url_path = 7;
+  string color = 8;
+  google.protobuf.Timestamp created_at = 9;
+  string created_by = 10;
+  google.protobuf.Timestamp updated_at = 11;
+  string updated_by = 12;
 }
 
 message CreatePlatformRequest {
-  string name = 1 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      min_len: 1
-      max_len: 24
-    }
-  ];
-  string url = 2 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {uri: true}
-  ];
-  string logo_url = 3 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {uri: true}
-  ];
-  string color = 4 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      len: 7
-      pattern: "^#[0-9a-fA-F]{6}$"
-    }
-  ];
-  string url_suffix = 5 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {uri: true}
-  ];
+  CreateUpdatePlatform platform = 1 [(buf.validate.field).required = true];
 }
 
 message CreatePlatformResponse {
@@ -243,33 +259,8 @@ message UpdatePlatformRequest {
     (buf.validate.field).required = true,
     (buf.validate.field).string.uuid = true
   ];
-  string name = 2 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      min_len: 1
-      max_len: 24
-    }
-  ];
-  string url = 3 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {uri: true}
-  ];
-  string logo_url = 4 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {uri: true}
-  ];
-  string color = 5 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      len: 7
-      pattern: "^#[0-9a-fA-F]{6}$"
-    }
-  ];
-  string url_suffix = 6 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {pattern: "^\\/([a-z0-9_@.~-]+\\/)*$"}
-  ];
-  google.protobuf.Timestamp updated_at = 7 [(buf.validate.field).required = true];
+  CreateUpdatePlatform platform = 2 [(buf.validate.field).required = true];
+  google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
 }
 
 message UpdatePlatformResponse {
@@ -308,4 +299,123 @@ message SocialsRequest {
 
 message SocialsResponse {
   repeated common.profile.v1.Socials socials = 1;
+}
+
+message CreateUpdatePlatform {
+  string name = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 1
+      max_len: 24
+      pattern: "[a-zA-Z0-9]*$"
+    }
+  ];
+  string url = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      uri: true
+      prefix: "https://"
+    }
+  ];
+  string url_suffix = 3 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {pattern: "^\\/[a-zA-Z0-9_@.~-]*\\/?$"}
+  ];
+  string logo_url = 4 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      uri: true
+      prefix: "https://"
+    }
+  ];
+  string logo_url_suffix = 5 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {pattern: "^\\/[a-zA-Z0-9_@.~-]*\\/?$"}
+  ];
+  string logo_url_path = 6 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {pattern: "^[a-zA-Z0-9_-]+(\\.svg)?$"}
+  ];
+  string color = 7 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      len: 7
+      pattern: "^#[0-9a-fA-F]{6}$"
+    }
+  ];
+
+  option (buf.validate.message).cel = {
+    id: "invalid_url"
+    message: "URL must not contain @"
+    expression: "!this.url.contains('@')"
+  };
+
+  option (buf.validate.message).cel = {
+    id: "invalid_logo_url"
+    message: "URL must not contain @"
+    expression: "!this.logo_url.contains('@')"
+  };
+}
+
+message CreateNameServerRequest {
+  CreateUpdateNameServer nameserver = 1 [(buf.validate.field).required = true];
+}
+message CreateNameServerResponse {
+  string id = 1;
+}
+
+message UpdateNameServerRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  CreateUpdateNameServer nameserver = 2 [(buf.validate.field).required = true];
+  google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
+}
+message UpdateNameServerResponse {
+  string id = 1;
+}
+
+message DeleteNameServerRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
+}
+message DeleteNameServerResponse {}
+
+message NameServersRequest {}
+
+message NameServersResponse {
+  repeated NameServers nameservers = 1;
+}
+
+message NameServers {
+  string id = 1;
+  string cname = 2;
+  string domain = 3;
+  bool active = 4;
+  google.protobuf.Timestamp created_at = 5;
+  string created_by = 6;
+  google.protobuf.Timestamp updated_at = 7;
+  string updated_by = 8;
+}
+
+message CreateUpdateNameServer {
+  string domain = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      uri: true
+      prefix: "https://"
+    }
+  ];
+  string cname = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 1
+      max_len: 24
+      pattern: "[a-z0-9]*$"
+    }
+  ];
 }

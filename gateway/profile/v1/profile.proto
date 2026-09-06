@@ -5,7 +5,6 @@ package gateway.profile.v1;
 import "buf/validate/validate.proto";
 import "common/profile/v1/profile.proto";
 import "google/protobuf/timestamp.proto";
-import "google/protobuf/wrappers.proto";
 
 service GatewayProfileService {
   //  Profile
@@ -50,21 +49,7 @@ service GatewayProfileService {
 
 // Profile
 message CreateProfileRequest {
-  string name = 1 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      min_len: 5
-      max_len: 24
-      pattern: "^[a-zA-Z]+( [a-zA-Z]+)*$"
-    }
-  ];
-  string title = 2 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      min_len: 5
-      max_len: 64
-    }
-  ];
+  common.profile.v1.CreateUpdateProfile profile = 1 [(buf.validate.field).required = true];
   google.protobuf.Timestamp dob = 3 [
     (buf.validate.field).required = true,
     (buf.validate.field).cel = {
@@ -84,7 +69,8 @@ message ProfileResponse {
 }
 
 message UpdateProfileRequest {
-  common.profile.v1.UpdateProfile profile = 1 [(buf.validate.field).required = true];
+  common.profile.v1.CreateUpdateProfile profile = 1 [(buf.validate.field).required = true];
+  google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
 }
 
 message UpdateProfileResponse {
@@ -110,7 +96,11 @@ message AboutResponse {
 }
 
 message UpdateAboutRequest {
-  common.profile.v1.UpdateAbout about = 1 [(buf.validate.field).required = true];
+  string about = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {min_len: 20}
+  ];
+  google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
 }
 
 message UpdateAboutResponse {
@@ -121,11 +111,21 @@ message UpdateAboutResponse {
 message CreateDomainRequest {
   string url = 1 [
     (buf.validate.field).required = true,
-    (buf.validate.field).string.uri = true
+    (buf.validate.field).string = {
+      uri: true
+      prefix: "https://"
+    }
   ];
+  option (buf.validate.message).cel = {
+    id: "invalid_url"
+    message: "URL must not contain @"
+    expression: "!this.url.contains('@')"
+  };
 }
 
-message CreateDomainResponse {}
+message CreateDomainResponse {
+  string id = 1;
+}
 
 message VerifyDomainRequest {
   string id = 1 [
@@ -157,39 +157,7 @@ message DomainsResponse {
 
 // Education
 message CreateEducationRequest {
-  string school = 1 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      min_len: 5
-      max_len: 64
-    }
-  ];
-  string degree = 2 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      min_len: 5
-      max_len: 64
-    }
-  ];
-  google.protobuf.StringValue affiliation = 3;
-  google.protobuf.StringValue field_of_study = 4;
-  google.protobuf.StringValue concentration = 5;
-  google.protobuf.Timestamp start_date = 6 [(buf.validate.field).required = true];
-  google.protobuf.Timestamp end_date = 7;
-  string address = 8 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      min_len: 5
-      max_len: 64
-    }
-  ];
-  google.protobuf.StringValue description = 9;
-
-  option (buf.validate.message).cel = {
-    id: "education_dates"
-    message: "End date cannot be in the future and must be after the start date."
-    expression: "!has(this.end_date) || (this.end_date <= now && this.end_date > this.start_date)"
-  };
+  common.profile.v1.CreateUpdateEducation education = 1 [(buf.validate.field).required = true];
 }
 
 message CreateEducationResponse {
@@ -224,7 +192,12 @@ message EducationsResponse {
 }
 
 message UpdateEducationRequest {
-  common.profile.v1.UpdateEducation education = 1 [(buf.validate.field).required = true];
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  common.profile.v1.CreateUpdateEducation education = 2 [(buf.validate.field).required = true];
+  google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
 }
 
 message UpdateEducationResponse {
@@ -233,42 +206,7 @@ message UpdateEducationResponse {
 
 // Experience
 message CreateExperienceRequest {
-  string title = 1 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      min_len: 5
-      max_len: 64
-    }
-  ];
-  string company_name = 2 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      min_len: 5
-      max_len: 64
-    }
-  ];
-  string location = 3 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      min_len: 5
-      max_len: 64
-    }
-  ];
-  string location_type = 4 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string.in = "onsite",
-    (buf.validate.field).string.in = "hybrid",
-    (buf.validate.field).string.in = "remote"
-  ];
-  google.protobuf.Timestamp start_date = 5 [(buf.validate.field).required = true];
-  google.protobuf.Timestamp end_date = 6;
-  google.protobuf.StringValue description = 7;
-
-  option (buf.validate.message).cel = {
-    id: "experience_dates"
-    message: "End date cannot be in the future and must be after the start date."
-    expression: "!has(this.end_date) || (this.end_date <= now && this.end_date > this.start_date)"
-  };
+  common.profile.v1.CreateUpdateExperience experience = 1 [(buf.validate.field).required = true];
 }
 
 message CreateExperienceResponse {
@@ -287,7 +225,12 @@ message ExperienceResponse {
 }
 
 message UpdateExperienceRequest {
-  common.profile.v1.UpdateExperience experience = 1 [(buf.validate.field).required = true];
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  common.profile.v1.CreateUpdateExperience experience = 2 [(buf.validate.field).required = true];
+  google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
 }
 
 message UpdateExperienceResponse {
@@ -301,6 +244,7 @@ message DeleteExperienceRequest {
   ];
   google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
 }
+
 message DeleteExperienceResponse {}
 
 message ExperiencesRequest {}
