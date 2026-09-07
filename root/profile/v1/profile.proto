@@ -370,7 +370,7 @@ message UpdateNameServerRequest {
     (buf.validate.field).string.uuid = true
   ];
   CreateUpdateNameServer nameserver = 2 [(buf.validate.field).required = true];
-  bool active = 3 [(buf.validate.field).required = true];
+  bool active = 3;
   google.protobuf.Timestamp updated_at = 4 [(buf.validate.field).required = true];
 }
 message UpdateNameServerResponse {
