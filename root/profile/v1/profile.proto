@@ -370,7 +370,8 @@ message UpdateNameServerRequest {
     (buf.validate.field).string.uuid = true
   ];
   CreateUpdateNameServer nameserver = 2 [(buf.validate.field).required = true];
-  google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
+  bool active = 3 [(buf.validate.field).required = true];
+  google.protobuf.Timestamp updated_at = 4 [(buf.validate.field).required = true];
 }
 message UpdateNameServerResponse {
   string id = 1;
@@ -413,7 +414,7 @@ message CreateUpdateNameServer {
   string cname = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string = {
-      min_len: 1
+      min_len: 5
       max_len: 24
       pattern: "[a-z0-9]*$"
     }
