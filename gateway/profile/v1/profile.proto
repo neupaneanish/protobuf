@@ -111,16 +111,23 @@ message UpdateAboutResponse {
 message CreateDomainRequest {
   string url = 1 [
     (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      uri: true
-      prefix: "https://"
+    (buf.validate.field).string.hostname = true,
+    (buf.validate.field).cel = {
+      id: "invalid_url"
+      message: "URL must contain at least one dot"
+      expression: "this.contains('.')"
+    },
+    (buf.validate.field).cel = {
+      id: "lowercase_ascii_url"
+      message: "URL must contain only lowercase ASCII letters, digits, hyphens, and dots"
+      expression: "this.matches('^[a-z0-9.-]+$')"
+    },
+    (buf.validate.field).cel = {
+      id: "no_trailing_dot"
+      message: "URL must not end with a trailing dot"
+      expression: "!this.endsWith('.')"
     }
   ];
-  option (buf.validate.message).cel = {
-    id: "invalid_url"
-    message: "URL must not contain @"
-    expression: "!this.url.contains('@')"
-  };
 }
 
 message CreateDomainResponse {

@@ -312,9 +312,21 @@ message CreateUpdatePlatform {
   ];
   string url = 2 [
     (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      uri: true
-      prefix: "https://"
+    (buf.validate.field).string.hostname = true,
+    (buf.validate.field).cel = {
+      id: "invalid_url"
+      message: "URL must contain at least one dot"
+      expression: "!this.contains('.')"
+    },
+    (buf.validate.field).cel = {
+      id: "lowercase_ascii_domain"
+      message: "URL must contain only lowercase ASCII letters, digits, hyphens, and dots"
+      expression: "this.matches('^[a-z0-9.-]+$')"
+    },
+    (buf.validate.field).cel = {
+      id: "no_trailing_dot"
+      message: "dns must not end with a trailing dot"
+      expression: "!this.endsWith('.')"
     }
   ];
   string url_suffix = 3 [
@@ -323,9 +335,21 @@ message CreateUpdatePlatform {
   ];
   string logo_url = 4 [
     (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      uri: true
-      prefix: "https://"
+    (buf.validate.field).string.hostname = true,
+    (buf.validate.field).cel = {
+      id: "invalid_logo_url"
+      message: "Logo URL must contain at least one dot"
+      expression: "!this.contains('.')"
+    },
+    (buf.validate.field).cel = {
+      id: "lowercase_ascii_domain"
+      message: "Domain must contain only lowercase ASCII letters, digits, hyphens, and dots"
+      expression: "this.matches('^[a-z0-9.-]+$')"
+    },
+    (buf.validate.field).cel = {
+      id: "no_trailing_dot"
+      message: "dns must not end with a trailing dot"
+      expression: "!this.endsWith('.')"
     }
   ];
   string logo_url_suffix = 5 [
@@ -343,18 +367,6 @@ message CreateUpdatePlatform {
       pattern: "^#[0-9a-fA-F]{6}$"
     }
   ];
-
-  option (buf.validate.message).cel = {
-    id: "invalid_url"
-    message: "URL must not contain @"
-    expression: "!this.url.contains('@')"
-  };
-
-  option (buf.validate.message).cel = {
-    id: "invalid_logo_url"
-    message: "URL must not contain @"
-    expression: "!this.logo_url.contains('@')"
-  };
 }
 
 message CreateNameServerRequest {
@@ -406,9 +418,21 @@ message NameServers {
 message CreateUpdateNameServer {
   string domain = 2 [
     (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      uri: true
-      prefix: "https://"
+    (buf.validate.field).string.hostname = true,
+    (buf.validate.field).cel = {
+      id: "invalid_domain"
+      message: "Domain must contain at least one dot"
+      expression: "this.contains('.')"
+    },
+    (buf.validate.field).cel = {
+      id: "lowercase_ascii_domain"
+      message: "Domain must contain only lowercase ASCII letters, digits, hyphens, and dots"
+      expression: "this.matches('^[a-z0-9.-]+$')"
+    },
+    (buf.validate.field).cel = {
+      id: "no_trailing_dot"
+      message: "dns must not end with a trailing dot"
+      expression: "!this.endsWith('.')"
     }
   ];
   string cname = 1 [
