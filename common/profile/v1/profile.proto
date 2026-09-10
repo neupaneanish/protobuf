@@ -23,14 +23,25 @@ message CreateUpdateProfile {
     (buf.validate.field).string = {
       min_len: 5
       max_len: 24
-      pattern: "^[a-zA-Z]+( [a-zA-Z]+)*$"
+      pattern: "^[a-zA-Z][a-zA-Z .'-]*[a-zA-Z.]$"
+    },
+    (buf.validate.field).cel = {
+      id: "name_no_consecutive_dots_underscore_hyphen"
+      message: "name must not contain consecutive dots or underscore or hyphen"
+      expression: "!this.matches('.*([ .,\\'-]{2,}).*')"
     }
   ];
   string title = 2 [
     (buf.validate.field).required = true,
     (buf.validate.field).string = {
-      min_len: 5
+      min_len: 3
       max_len: 64
+      pattern: "^[a-zA-Z0-9][a-zA-Z0-9 .'&/()-]*[a-zA-Z0-9).]$"
+    },
+    (buf.validate.field).cel = {
+      id: "title_no_consecutive_dots_underscore_hyphen"
+      message: "title must not contain consecutive dots or underscore or hyphen"
+      expression: "!this.matches('.*([ .\\'&/()-]{2,}).*')"
     }
   ];
 }
@@ -47,22 +58,29 @@ message About {
 message Domains {
   string id = 1;
   string user_id = 2;
-  string name_server = 3;
-  string fqdn = 4;
-  string txt = 5;
-  bool verified = 6;
-  google.protobuf.Timestamp created_at = 7;
-  string created_by = 8;
-  google.protobuf.Timestamp updated_at = 9;
-  string updated_by = 10;
+  string ip = 3;
+  string ip_type = 4;
+  string fqdn = 5;
+  string txt = 6;
+  bool verified = 7;
+  google.protobuf.Timestamp created_at = 8;
+  string created_by = 9;
+  google.protobuf.Timestamp updated_at = 10;
+  string updated_by = 11;
 }
 
 message CreateUpdateEducation {
   string school = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string = {
-      min_len: 5
+      min_len: 3
       max_len: 64
+      pattern: "^[a-zA-Z0-9][a-zA-Z0-9 .,'-]*[a-zA-Z0-9]$"
+    },
+    (buf.validate.field).cel = {
+      id: "school_no_consecutive_dots_underscore_hyphen"
+      message: "school must not contain consecutive space or dots or , or hyphen"
+      expression: "!this.matches('.*([ .,\\'-]{2,}).*')"
     }
   ];
   string degree = 2 [
@@ -70,21 +88,69 @@ message CreateUpdateEducation {
     (buf.validate.field).string = {
       min_len: 5
       max_len: 64
+      pattern: "^[a-zA-Z0-9][a-zA-Z0-9 .,'-]*[a-zA-Z0-9]$"
+    },
+    (buf.validate.field).cel = {
+      id: "degree_no_consecutive_dots_underscore_hyphen"
+      message: "degree must not contain consecutive space or dots or , or hyphen"
+      expression: "!this.matches('.*([ .,\\'-]{2,}).*')"
     }
   ];
-  google.protobuf.StringValue affiliation = 3;
-  google.protobuf.StringValue field_of_study = 4;
-  google.protobuf.StringValue concentration = 5;
+  google.protobuf.StringValue affiliation = 3 [
+    (buf.validate.field).string = {
+      min_len: 5
+      max_len: 64
+      pattern: "^[a-zA-Z0-9][a-zA-Z0-9 .,'-]*[a-zA-Z0-9]$"
+    },
+    (buf.validate.field).cel = {
+      id: "affiliation_no_consecutive_dots_underscore_hyphen"
+      message: "affiliation must not contain consecutive space or dots or , or hyphen"
+      expression: "!this.matches('.*([ .,\\'-]{2,}).*')"
+    }
+  ];
+  google.protobuf.StringValue field_of_study = 4 [
+    (buf.validate.field).string = {
+      min_len: 5
+      max_len: 64
+      pattern: "^[a-zA-Z0-9][a-zA-Z0-9 .,'-]*[a-zA-Z0-9]$"
+    },
+    (buf.validate.field).cel = {
+      id: "field_of_study_no_consecutive_dots_underscore_hyphen"
+      message: "field_of_study must not contain consecutive space or dots or , or hyphen"
+      expression: "!this.matches('.*([ .,\\'-]{2,}).*')"
+    }
+  ];
+  google.protobuf.StringValue concentration = 5 [
+    (buf.validate.field).string = {
+      min_len: 5
+      max_len: 64
+      pattern: "^[a-zA-Z0-9][a-zA-Z0-9 .,'-]*[a-zA-Z0-9]$"
+    },
+    (buf.validate.field).cel = {
+      id: "concentration_no_consecutive_dots_underscore_hyphen"
+      message: "concentration must not contain consecutive space or dots or , or hyphen"
+      expression: "!this.matches('.*([ .,\\'-]{2,}).*')"
+    }
+  ];
   google.protobuf.Timestamp start_date = 6 [(buf.validate.field).required = true];
   google.protobuf.Timestamp end_date = 7;
   string address = 8 [
     (buf.validate.field).required = true,
     (buf.validate.field).string = {
-      min_len: 5
+      min_len: 3
       max_len: 64
+      pattern: "^[a-zA-Z0-9][a-zA-Z0-9 .,'-]*[a-zA-Z0-9]$"
+    },
+    (buf.validate.field).cel = {
+      id: "address_no_consecutive_dots_underscore_hyphen"
+      message: "address must not contain consecutive space or dots or , or hyphen"
+      expression: "!this.matches('.*([ .,\\'-]{2,}).*')"
     }
   ];
-  google.protobuf.StringValue description = 9;
+  google.protobuf.StringValue description = 9 [(buf.validate.field).string = {
+    min_len: 5
+    max_len: 1000
+  }];
 
   option (buf.validate.message).cel = {
     id: "education_dates"
@@ -151,6 +217,12 @@ message CreateUpdateExperience {
     (buf.validate.field).string = {
       min_len: 5
       max_len: 64
+      pattern: "^[a-zA-Z0-9][a-zA-Z0-9 .,'-]*[a-zA-Z0-9]$"
+    },
+    (buf.validate.field).cel = {
+      id: "title_no_consecutive_dots_underscore_hyphen"
+      message: "title must not contain consecutive space or dots or , or hyphen"
+      expression: "!this.matches('.*([ .,\\'-]{2,}).*')"
     }
   ];
   string company_name = 2 [
@@ -158,6 +230,12 @@ message CreateUpdateExperience {
     (buf.validate.field).string = {
       min_len: 5
       max_len: 64
+      pattern: "^[a-zA-Z0-9][a-zA-Z0-9 .,'-]*[a-zA-Z0-9]$"
+    },
+    (buf.validate.field).cel = {
+      id: "company_name_no_consecutive_dots_underscore_hyphen"
+      message: "company_name must not contain consecutive space or dots or , or hyphen"
+      expression: "!this.matches('.*([ .,\\'-]{2,}).*')"
     }
   ];
   string location = 3 [
@@ -165,17 +243,30 @@ message CreateUpdateExperience {
     (buf.validate.field).string = {
       min_len: 5
       max_len: 64
+      pattern: "^[a-zA-Z0-9][a-zA-Z0-9 .,'-]*[a-zA-Z0-9]$"
+    },
+    (buf.validate.field).cel = {
+      id: "location_no_consecutive_dots_underscore_hyphen"
+      message: "location must not contain consecutive space or dots or , or hyphen"
+      expression: "!this.matches('.*([ .,\\'-]{2,}).*')"
     }
   ];
   string location_type = 4 [
     (buf.validate.field).required = true,
-    (buf.validate.field).string.in = "onsite",
-    (buf.validate.field).string.in = "hybrid",
-    (buf.validate.field).string.in = "remote"
+    (buf.validate.field).string = {
+      in: [
+        "onsite",
+        "hybrid",
+        "remote"
+      ]
+    }
   ];
   google.protobuf.Timestamp start_date = 5 [(buf.validate.field).required = true];
   google.protobuf.Timestamp end_date = 6;
-  google.protobuf.StringValue description = 7;
+  google.protobuf.StringValue description = 7 [(buf.validate.field).string = {
+    min_len: 5
+    max_len: 1000
+  }];
 
   option (buf.validate.message).cel = {
     id: "experience_dates"
@@ -195,6 +286,12 @@ message UpdateSocial {
     (buf.validate.field).string = {
       min_len: 5
       max_len: 64
+      pattern: "^[a-z0-9][a-z0-9._-]*[a-z0-9]$"
+    },
+    (buf.validate.field).cel = {
+      id: "username_no_consecutive_dots"
+      message: "username must not contain consecutive dots or underscore or hyphen"
+      expression: "!this.matches('.*([._-]{2,}).*')"
     }
   ];
   google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
@@ -215,11 +312,8 @@ message Socials {
   string updated_by = 12;
 }
 
-message Platforms {
+message Icons {
   string id = 1;
   string name = 2;
   string url = 3;
-  string url_suffix = 4;
-  string logo = 5;
-  string color = 6;
 }

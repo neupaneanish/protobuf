@@ -37,14 +37,12 @@ service GatewayProfileService {
   rpc DeleteExperience(DeleteExperienceRequest) returns (DeleteExperienceResponse);
   rpc Experiences(ExperiencesRequest) returns (ExperiencesResponse);
 
-  // Platform
-  rpc Platforms(PlatformsRequest) returns (PlatformsResponse);
-
   // Social
   rpc CreateSocial(CreateSocialRequest) returns (CreateSocialResponse);
   rpc UpdateSocial(UpdateSocialRequest) returns (UpdateSocialResponse);
   rpc DeleteSocial(DeleteSocialRequest) returns (DeleteSocialResponse);
   rpc Socials(SocialsRequest) returns (SocialsResponse);
+  rpc SocialIcons(SocialIconsRequest) returns (SocialIconsResponse);
 }
 
 // Profile
@@ -98,7 +96,10 @@ message AboutResponse {
 message UpdateAboutRequest {
   string about = 1 [
     (buf.validate.field).required = true,
-    (buf.validate.field).string = {min_len: 20}
+    (buf.validate.field).string = {
+      min_len: 5
+      max_len: 1000
+    }
   ];
   google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
 }
@@ -111,21 +112,10 @@ message UpdateAboutResponse {
 message CreateDomainRequest {
   string url = 1 [
     (buf.validate.field).required = true,
-    (buf.validate.field).string.hostname = true,
-    (buf.validate.field).cel = {
-      id: "invalid_url"
-      message: "URL must contain at least one dot"
-      expression: "this.contains('.')"
-    },
-    (buf.validate.field).cel = {
-      id: "lowercase_ascii_url"
-      message: "URL must contain only lowercase ASCII letters, digits, hyphens, and dots"
-      expression: "this.matches('^[a-z0-9.-]+$')"
-    },
-    (buf.validate.field).cel = {
-      id: "no_trailing_dot"
-      message: "URL must not end with a trailing dot"
-      expression: "!this.endsWith('.')"
+    (buf.validate.field).string = {
+      min_len: 4
+      max_len: 253
+      hostname: true
     }
   ];
 }
@@ -261,15 +251,15 @@ message ExperiencesResponse {
 }
 
 // Platform
-message PlatformsRequest {}
+message SocialIconsRequest {}
 
-message PlatformsResponse {
-  repeated common.profile.v1.Platforms platforms = 1;
+message SocialIconsResponse {
+  repeated common.profile.v1.Icons icons = 1;
 }
 
 // Social
 message CreateSocialRequest {
-  string platform_id = 1 [
+  string icon_id = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string.uuid = true
   ];
@@ -278,7 +268,12 @@ message CreateSocialRequest {
     (buf.validate.field).string = {
       min_len: 5
       max_len: 64
-      pattern: "^[a-z0-9]+([._-][a-z0-9]+)*$"
+      pattern: "^[a-z0-9][a-z0-9._-]*[a-z0-9]$"
+    },
+    (buf.validate.field).cel = {
+      id: "username_no_consecutive_dots_underscore_hyphen"
+      message: "username must not contain consecutive dots or underscore or hyphen"
+      expression: "!this.matches('.*([._-]{2,}).*')"
     }
   ];
 }

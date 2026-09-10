@@ -5,6 +5,7 @@ package root.profile.v1;
 import "buf/validate/validate.proto";
 import "common/profile/v1/profile.proto";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 
 service RootProfileService {
   // Profile
@@ -17,12 +18,10 @@ service RootProfileService {
 
   // Domains
   rpc Domains(DomainsRequest) returns (DomainsResponse);
-  rpc CheckDomain(CheckDomainRequest) returns (CheckDomainResponse);
 
   // NameServers
   rpc NameServers(NameServersRequest) returns (NameServersResponse);
   rpc CreateNameServer(CreateNameServerRequest) returns (CreateNameServerResponse);
-  rpc UpdateNameServer(UpdateNameServerRequest) returns (UpdateNameServerResponse);
   rpc DeleteNameServer(DeleteNameServerRequest) returns (DeleteNameServerResponse);
 
   // Educations
@@ -35,12 +34,12 @@ service RootProfileService {
   rpc UpdateExperience(UpdateExperienceRequest) returns (UpdateExperienceResponse);
   rpc Experiences(ExperiencesRequest) returns (ExperiencesResponse);
 
-  // Platform
-  rpc Platforms(PlatformsRequest) returns (PlatformsResponse);
-  rpc Platform(PlatformRequest) returns (PlatformResponse);
-  rpc CreatePlatform(CreatePlatformRequest) returns (CreatePlatformResponse);
-  rpc UpdatePlatform(UpdatePlatformRequest) returns (UpdatePlatformResponse);
-  rpc DeletePlatform(DeletePlatformRequest) returns (DeletePlatformResponse);
+  // Icons
+  rpc Icons(IconsRequest) returns (IconsResponse);
+  rpc Icon(IconRequest) returns (IconResponse);
+  rpc CreateIcon(CreateIconRequest) returns (CreateIconResponse);
+  rpc UpdateIcon(UpdateIconRequest) returns (UpdateIconResponse);
+  rpc DeleteIcon(DeleteIconRequest) returns (DeleteIconResponse);
 
   // Social
   rpc UpdateSocial(UpdateSocialRequest) returns (UpdateSocialResponse);
@@ -91,7 +90,10 @@ message UpdateAboutRequest {
   ];
   string about = 2 [
     (buf.validate.field).required = true,
-    (buf.validate.field).string = {min_len: 20}
+    (buf.validate.field).string = {
+      min_len: 5
+      max_len: 1000
+    }
   ];
   google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
 }
@@ -218,27 +220,27 @@ message ExperiencesResponse {
 }
 
 // Platform
-message PlatformsRequest {}
+message IconsRequest {}
 
-message PlatformsResponse {
-  repeated common.profile.v1.Platforms platforms = 1;
+message IconsResponse {
+  repeated common.profile.v1.Icons icons = 1;
 }
 
-message PlatformRequest {
+message IconRequest {
   string id = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string.uuid = true
   ];
 }
 
-message PlatformResponse {
+message IconResponse {
   string id = 1;
   string name = 2;
-  string url = 3;
-  string url_suffix = 4;
-  string logo_url = 5;
-  string logo_url_suffix = 6;
-  string logo_url_path = 7;
+  string site = 3;
+  string site_suffix = 4;
+  string url = 5;
+  string slug = 6;
+  google.protobuf.StringValue variant = 7;
   string color = 8;
   google.protobuf.Timestamp created_at = 9;
   string created_by = 10;
@@ -246,28 +248,24 @@ message PlatformResponse {
   string updated_by = 12;
 }
 
-message CreatePlatformRequest {
-  CreateUpdatePlatform platform = 1 [(buf.validate.field).required = true];
+message CreateIconRequest {
+  CreateUpdateIcon platform = 1 [(buf.validate.field).required = true];
 }
 
-message CreatePlatformResponse {
-  string id = 1;
-}
+message CreateIconResponse {}
 
-message UpdatePlatformRequest {
+message UpdateIconRequest {
   string id = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string.uuid = true
   ];
-  CreateUpdatePlatform platform = 2 [(buf.validate.field).required = true];
+  CreateUpdateIcon icon = 2 [(buf.validate.field).required = true];
   google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
 }
 
-message UpdatePlatformResponse {
-  string id = 1;
-}
+message UpdateIconResponse {}
 
-message DeletePlatformRequest {
+message DeleteIconRequest {
   string id = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string.uuid = true
@@ -275,7 +273,7 @@ message DeletePlatformRequest {
   google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
 }
 
-message DeletePlatformResponse {}
+message DeleteIconResponse {}
 
 // Social
 message UpdateSocialRequest {
@@ -301,64 +299,73 @@ message SocialsResponse {
   repeated common.profile.v1.Socials socials = 1;
 }
 
-message CreateUpdatePlatform {
+message CreateUpdateIcon {
   string name = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string = {
       min_len: 1
       max_len: 24
-      pattern: "[a-zA-Z0-9]*$"
+      pattern: "^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*$"
+    },
+    (buf.validate.field).cel = {
+      id: "name_no_consecutive_dots_underscore_hyphen"
+      message: "name must not contain consecutive dots or underscore or hyphen"
+      expression: "!this.matches('.*([ ]{2,}).*')"
     }
   ];
-  string url = 2 [
+  string site = 2 [
     (buf.validate.field).required = true,
-    (buf.validate.field).string.hostname = true,
-    (buf.validate.field).cel = {
-      id: "invalid_url"
-      message: "URL must contain at least one dot"
-      expression: "!this.contains('.')"
-    },
-    (buf.validate.field).cel = {
-      id: "lowercase_ascii_domain"
-      message: "URL must contain only lowercase ASCII letters, digits, hyphens, and dots"
-      expression: "this.matches('^[a-z0-9.-]+$')"
-    },
-    (buf.validate.field).cel = {
-      id: "no_trailing_dot"
-      message: "dns must not end with a trailing dot"
-      expression: "!this.endsWith('.')"
+    (buf.validate.field).string = {
+      min_len: 4
+      max_len: 254
+      hostname: true
     }
   ];
-  string url_suffix = 3 [
+  string site_suffix = 3 [
     (buf.validate.field).required = true,
-    (buf.validate.field).string = {pattern: "^\\/[a-zA-Z0-9_@.~-]*\\/?$"}
-  ];
-  string logo_url = 4 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string.hostname = true,
-    (buf.validate.field).cel = {
-      id: "invalid_logo_url"
-      message: "Logo URL must contain at least one dot"
-      expression: "!this.contains('.')"
+    (buf.validate.field).string = {
+      min_len: 1
+      max_len: 128
+      pattern: "^[a-zA-Z0-9]([a-zA-Z0-9/-]*[a-zA-Z0-9])?$"
     },
     (buf.validate.field).cel = {
-      id: "lowercase_ascii_domain"
-      message: "Domain must contain only lowercase ASCII letters, digits, hyphens, and dots"
-      expression: "this.matches('^[a-z0-9.-]+$')"
-    },
-    (buf.validate.field).cel = {
-      id: "no_trailing_dot"
-      message: "dns must not end with a trailing dot"
-      expression: "!this.endsWith('.')"
+      id: "site_suffix_no_consecutive_dots_underscore_hyphen"
+      message: "site_suffix must not contain consecutive dots or underscore or hyphen"
+      expression: "!this.matches('.*([/-]{2,}).*')"
     }
   ];
-  string logo_url_suffix = 5 [
+  string url = 4 [
     (buf.validate.field).required = true,
-    (buf.validate.field).string = {pattern: "^\\/[a-zA-Z0-9_@.~-]*\\/?$"}
+    (buf.validate.field).string = {
+      min_len: 4
+      max_len: 253
+      hostname: true
+    }
   ];
-  string logo_url_path = 6 [
+  string slug = 5 [
     (buf.validate.field).required = true,
-    (buf.validate.field).string = {pattern: "^[a-zA-Z0-9_-]+(\\.svg)?$"}
+    (buf.validate.field).string = {
+      min_len: 1
+      max_len: 128
+      pattern: "^[a-zA-Z0-9]([a-zA-Z0-9/-]*[a-zA-Z0-9])?(\\.svg)?$"
+    },
+    (buf.validate.field).cel = {
+      id: "slug_no_consecutive_dots_underscore_hyphen"
+      message: "slug must not contain consecutive dots or underscore or hyphen"
+      expression: "!this.matches('.*([/-]{2,}).*')"
+    }
+  ];
+  google.protobuf.StringValue variant = 6 [
+    (buf.validate.field).string = {
+      min_len: 1
+      max_len: 128
+      pattern: "^[a-zA-Z0-9]([a-zA-Z0-9/-]*[a-zA-Z0-9])?(\\.svg)?$"
+    },
+    (buf.validate.field).cel = {
+      id: "variant_no_consecutive_dots_underscore_hyphen"
+      message: "variant must not contain consecutive dots or underscore or hyphen"
+      expression: "!this.matches('.*([/-]{2,}).*')"
+    }
   ];
   string color = 7 [
     (buf.validate.field).required = true,
@@ -370,24 +377,28 @@ message CreateUpdatePlatform {
 }
 
 message CreateNameServerRequest {
-  CreateUpdateNameServer nameserver = 1 [(buf.validate.field).required = true];
-}
-message CreateNameServerResponse {
-  string id = 1;
+  string ip_type = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      in: [
+        "A",
+        "AAAA"
+      ]
+    }
+  ];
+  string ip = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.ip = true
+  ];
+
+  option (buf.validate.message).cel = {
+    id: "ip_type_mismatch"
+    message: "IP address version must match record type (A requires IPv4, AAAA requires IPv6)"
+    expression: "(this.ip_type == 'A' && this.ip.isIp(4)) || (this.ip_type == 'AAAA' && this.ip.isIp(6))"
+  };
 }
 
-message UpdateNameServerRequest {
-  string id = 1 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string.uuid = true
-  ];
-  CreateUpdateNameServer nameserver = 2 [(buf.validate.field).required = true];
-  bool active = 3;
-  google.protobuf.Timestamp updated_at = 4 [(buf.validate.field).required = true];
-}
-message UpdateNameServerResponse {
-  string id = 1;
-}
+message CreateNameServerResponse {}
 
 message DeleteNameServerRequest {
   string id = 1 [
@@ -406,41 +417,10 @@ message NameServersResponse {
 
 message NameServers {
   string id = 1;
-  string cname = 2;
-  string domain = 3;
-  bool active = 4;
-  google.protobuf.Timestamp created_at = 5;
-  string created_by = 6;
-  google.protobuf.Timestamp updated_at = 7;
-  string updated_by = 8;
-}
-
-message CreateUpdateNameServer {
-  string domain = 2 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string.hostname = true,
-    (buf.validate.field).cel = {
-      id: "invalid_domain"
-      message: "Domain must contain at least one dot"
-      expression: "this.contains('.')"
-    },
-    (buf.validate.field).cel = {
-      id: "lowercase_ascii_domain"
-      message: "Domain must contain only lowercase ASCII letters, digits, hyphens, and dots"
-      expression: "this.matches('^[a-z0-9.-]+$')"
-    },
-    (buf.validate.field).cel = {
-      id: "no_trailing_dot"
-      message: "dns must not end with a trailing dot"
-      expression: "!this.endsWith('.')"
-    }
-  ];
-  string cname = 1 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      min_len: 5
-      max_len: 24
-      pattern: "[a-z0-9]*$"
-    }
-  ];
+  string ip_type = 2;
+  string ip = 3;
+  google.protobuf.Timestamp created_at = 4;
+  string created_by = 5;
+  google.protobuf.Timestamp updated_at = 6;
+  string updated_by = 7;
 }
