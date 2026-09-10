@@ -348,19 +348,7 @@ message CreateUpdateIcon {
       expression: "!this.matches('.*([/-]{2,}).*')"
     }
   ];
-  google.protobuf.StringValue variant = 6 [
-    (buf.validate.field).string = {
-      min_len: 1
-      max_len: 128
-      pattern: "^[a-zA-Z0-9]([a-zA-Z0-9/-]*[a-zA-Z0-9])?(\\.svg)?$"
-    },
-    (buf.validate.field).cel = {
-      id: "variant_no_consecutive_dots_underscore_hyphen"
-      message: "variant must not contain consecutive dots or underscore or hyphen"
-      expression: "!this.matches('.*([/-]{2,}).*')"
-    }
-  ];
-  string color = 7 [
+  string color = 6 [
     (buf.validate.field).required = true,
     (buf.validate.field).string = {
       len: 7
