@@ -160,9 +160,7 @@ message UpdateEducationRequest {
   google.protobuf.Timestamp updated_at = 4 [(buf.validate.field).required = true];
 }
 
-message UpdateEducationResponse {
-  string id = 1;
-}
+message UpdateEducationResponse {}
 
 message EducationsRequest {
   string user_id = 1 [
@@ -204,9 +202,7 @@ message UpdateExperienceRequest {
   google.protobuf.Timestamp updated_at = 4 [(buf.validate.field).required = true];
 }
 
-message UpdateExperienceResponse {
-  string id = 1;
-}
+message UpdateExperienceResponse {}
 
 message ExperiencesRequest {
   string user_id = 1 [
@@ -219,7 +215,7 @@ message ExperiencesResponse {
   repeated common.profile.v1.Experiences experiences = 1;
 }
 
-// Platform
+// Icon
 message IconsRequest {}
 
 message IconsResponse {
@@ -284,9 +280,7 @@ message UpdateSocialRequest {
   common.profile.v1.UpdateSocial social = 2 [(buf.validate.field).required = true];
 }
 
-message UpdateSocialResponse {
-  string id = 1;
-}
+message UpdateSocialResponse {}
 
 message SocialsRequest {
   string user_id = 1 [
@@ -407,6 +401,7 @@ message DeleteNameServerRequest {
   ];
   google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
 }
+
 message DeleteNameServerResponse {}
 
 message NameServersRequest {}

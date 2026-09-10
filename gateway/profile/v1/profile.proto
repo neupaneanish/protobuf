@@ -120,9 +120,7 @@ message CreateDomainRequest {
   ];
 }
 
-message CreateDomainResponse {
-  string id = 1;
-}
+message CreateDomainResponse {}
 
 message VerifyDomainRequest {
   string id = 1 [
@@ -132,9 +130,7 @@ message VerifyDomainRequest {
   google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
 }
 
-message VerifyDomainResponse {
-  string id = 1;
-}
+message VerifyDomainResponse {}
 
 message DeleteDomainRequest {
   string id = 1 [
@@ -157,9 +153,7 @@ message CreateEducationRequest {
   common.profile.v1.CreateUpdateEducation education = 1 [(buf.validate.field).required = true];
 }
 
-message CreateEducationResponse {
-  string id = 1;
-}
+message CreateEducationResponse {}
 
 message EducationRequest {
   string id = 1 [
@@ -197,18 +191,14 @@ message UpdateEducationRequest {
   google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
 }
 
-message UpdateEducationResponse {
-  string id = 1;
-}
+message UpdateEducationResponse {}
 
 // Experience
 message CreateExperienceRequest {
   common.profile.v1.CreateUpdateExperience experience = 1 [(buf.validate.field).required = true];
 }
 
-message CreateExperienceResponse {
-  string id = 1;
-}
+message CreateExperienceResponse {}
 
 message ExperienceRequest {
   string id = 1 [
@@ -230,9 +220,7 @@ message UpdateExperienceRequest {
   google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
 }
 
-message UpdateExperienceResponse {
-  string id = 1;
-}
+message UpdateExperienceResponse {}
 
 message DeleteExperienceRequest {
   string id = 1 [
@@ -278,17 +266,13 @@ message CreateSocialRequest {
   ];
 }
 
-message CreateSocialResponse {
-  string id = 1;
-}
+message CreateSocialResponse {}
 
 message UpdateSocialRequest {
   common.profile.v1.UpdateSocial social = 1 [(buf.validate.field).required = true];
 }
 
-message UpdateSocialResponse {
-  string id = 1;
-}
+message UpdateSocialResponse {}
 
 message DeleteSocialRequest {
   string id = 1 [
