@@ -315,24 +315,23 @@ message CreateUpdateIcon {
       hostname: true
     }
   ];
-  string site_suffix = 3 [
-    (buf.validate.field).required = true,
+  google.protobuf.StringValue site_suffix = 3 [
     (buf.validate.field).string = {
       min_len: 1
-      max_len: 128
-      pattern: "^[a-zA-Z0-9]([a-zA-Z0-9/-]*[a-zA-Z0-9])?$"
+      max_len: 32
+      pattern: "^\\/[a-zA-Z0-9_@.~-]*\\/?$"
     },
     (buf.validate.field).cel = {
-      id: "site_suffix_no_consecutive_dots_underscore_hyphen"
-      message: "site_suffix must not contain consecutive dots or underscore or hyphen"
-      expression: "!this.matches('.*([/-]{2,}).*')"
+      id: "site_suffix_no_consecutive_repeat_specials"
+      message: "site_suffix must not contain consecutive slashes, dots, underscores, or hyphens"
+      expression: "!this.matches('.*(//|\\\\.\\\\.|--|__|~~).*')"
     }
   ];
   string url = 4 [
     (buf.validate.field).required = true,
     (buf.validate.field).string = {
       min_len: 4
-      max_len: 253
+      max_len: 254
       hostname: true
     }
   ];
@@ -407,10 +406,10 @@ message DeleteNameServerResponse {}
 message NameServersRequest {}
 
 message NameServersResponse {
-  repeated NameServers nameservers = 1;
+  repeated Nameservers nameservers = 1;
 }
 
-message NameServers {
+message Nameservers {
   string id = 1;
   string ip_type = 2;
   string ip = 3;
