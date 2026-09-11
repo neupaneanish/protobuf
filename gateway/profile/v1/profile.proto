@@ -238,14 +238,13 @@ message ExperiencesResponse {
   repeated common.profile.v1.Experiences experiences = 1;
 }
 
-// Platform
+// Social
 message SocialIconsRequest {}
 
 message SocialIconsResponse {
   repeated common.profile.v1.Icons icons = 1;
 }
 
-// Social
 message CreateSocialRequest {
   string icon_id = 1 [
     (buf.validate.field).required = true,

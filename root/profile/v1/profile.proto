@@ -19,10 +19,10 @@ service RootProfileService {
   // Domains
   rpc Domains(DomainsRequest) returns (DomainsResponse);
 
-  // NameServers
-  rpc NameServers(NameServersRequest) returns (NameServersResponse);
-  rpc CreateNameServer(CreateNameServerRequest) returns (CreateNameServerResponse);
-  rpc DeleteNameServer(DeleteNameServerRequest) returns (DeleteNameServerResponse);
+  // Nameservers
+  rpc Nameservers(NameserversRequest) returns (NameserversResponse);
+  rpc CreateNameserver(CreateNameserverRequest) returns (CreateNameserverResponse);
+  rpc DeleteNameserver(DeleteNameserverRequest) returns (DeleteNameserverResponse);
 
   // Educations
   rpc Education(EducationRequest) returns (EducationResponse);
@@ -244,7 +244,7 @@ message IconResponse {
 }
 
 message CreateIconRequest {
-  CreateUpdateIcon platform = 1 [(buf.validate.field).required = true];
+  CreateUpdateIcon icon = 1 [(buf.validate.field).required = true];
 }
 
 message CreateIconResponse {}
@@ -356,7 +356,7 @@ message CreateUpdateIcon {
   ];
 }
 
-message CreateNameServerRequest {
+message CreateNameserverRequest {
   string ip_type = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string = {
@@ -378,9 +378,9 @@ message CreateNameServerRequest {
   };
 }
 
-message CreateNameServerResponse {}
+message CreateNameserverResponse {}
 
-message DeleteNameServerRequest {
+message DeleteNameserverRequest {
   string id = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string.uuid = true
@@ -388,11 +388,11 @@ message DeleteNameServerRequest {
   google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
 }
 
-message DeleteNameServerResponse {}
+message DeleteNameserverResponse {}
 
-message NameServersRequest {}
+message NameserversRequest {}
 
-message NameServersResponse {
+message NameserversResponse {
   repeated Nameservers nameservers = 1;
 }
 
