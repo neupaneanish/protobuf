@@ -300,20 +300,19 @@ message UpdateSocial {
 message Socials {
   string id = 1;
   string user_id = 2;
-  string platform_id = 3;
+  string icon_id = 3;
   string username = 4;
   string name = 5;
-  string url = 6;
-  string logo = 7;
-  string color = 8;
-  google.protobuf.Timestamp created_at = 9;
-  string created_by = 10;
-  google.protobuf.Timestamp updated_at = 11;
-  string updated_by = 12;
+  string site = 6;
+  string icon = 7;
+  google.protobuf.Timestamp created_at = 8;
+  string created_by = 9;
+  google.protobuf.Timestamp updated_at = 10;
+  string updated_by = 11;
 }
 
 message Icons {
   string id = 1;
   string name = 2;
-  string url = 3;
+  string icon = 3;
 }
