@@ -233,15 +233,14 @@ message IconResponse {
   string id = 1;
   string name = 2;
   string site = 3;
-  string site_suffix = 4;
+  google.protobuf.StringValue site_suffix = 4;
   string url = 5;
   string slug = 6;
-  google.protobuf.StringValue variant = 7;
-  string color = 8;
-  google.protobuf.Timestamp created_at = 9;
-  string created_by = 10;
-  google.protobuf.Timestamp updated_at = 11;
-  string updated_by = 12;
+  string color = 7;
+  google.protobuf.Timestamp created_at = 8;
+  string created_by = 9;
+  google.protobuf.Timestamp updated_at = 10;
+  string updated_by = 11;
 }
 
 message CreateIconRequest {
