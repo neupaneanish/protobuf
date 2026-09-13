@@ -8,6 +8,7 @@ import "google/protobuf/timestamp.proto";
 
 service GatewayProfileService {
   //  Profile
+  rpc CheckProfile(CheckProfileRequest) returns (CheckProfileResponse);
   rpc CreateProfile(CreateProfileRequest) returns (CreateProfileResponse);
   rpc Profile(ProfileRequest) returns (ProfileResponse);
   rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse);
@@ -46,6 +47,12 @@ service GatewayProfileService {
 }
 
 // Profile
+message CheckProfileRequest {}
+
+message CheckProfileResponse {
+  bool exists = 1;
+}
+
 message CreateProfileRequest {
   common.profile.v1.CreateUpdateProfile profile = 1 [(buf.validate.field).required = true];
   google.protobuf.Timestamp dob = 3 [
