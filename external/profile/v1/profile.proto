@@ -45,11 +45,12 @@ message ExperiencesResponse {
 message SocialsRequest {}
 
 message SocialsResponse {
+  repeated Socials socials = 1;
+}
+
+message Socials {
   string id = 1;
-  string username = 2;
-  string name = 3;
-  string url = 4;
-  string logo_url = 5;
-  string color = 6;
-  string url_suffix = 7;
+  string name = 2;
+  string url = 3;
+  string icon = 5;
 }
