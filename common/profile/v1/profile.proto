@@ -316,3 +316,11 @@ message Icons {
   string name = 2;
   string icon = 3;
 }
+
+message Exists {
+  bool profile = 1;
+  bool about = 2;
+  bool educations = 3;
+  bool experiences = 4;
+  bool socials = 5;
+}

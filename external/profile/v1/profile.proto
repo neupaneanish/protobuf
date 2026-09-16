@@ -5,11 +5,18 @@ package external.profile.v1;
 import "common/profile/v1/profile.proto";
 
 service ExternalProfileService {
+  rpc Exists(ExistsRequest) returns (ExistsResponse);
   rpc Profile(ProfileRequest) returns (ProfileResponse);
   rpc About(AboutRequest) returns (AboutResponse);
   rpc Educations(EducationsRequest) returns (EducationsResponse);
   rpc Experiences(ExperiencesRequest) returns (ExperiencesResponse);
   rpc Socials(SocialsRequest) returns (SocialsResponse);
+}
+
+message ExistsRequest {}
+
+message ExistsResponse {
+  common.profile.v1.Exists exists = 1;
 }
 
 // Profile

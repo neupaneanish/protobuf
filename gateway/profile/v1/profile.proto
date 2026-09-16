@@ -8,7 +8,7 @@ import "google/protobuf/timestamp.proto";
 
 service GatewayProfileService {
   //  Profile
-  rpc CheckProfile(CheckProfileRequest) returns (CheckProfileResponse);
+  rpc Exists(ExistsRequest) returns (ExistsResponse);
   rpc CreateProfile(CreateProfileRequest) returns (CreateProfileResponse);
   rpc Profile(ProfileRequest) returns (ProfileResponse);
   rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse);
@@ -47,10 +47,10 @@ service GatewayProfileService {
 }
 
 // Profile
-message CheckProfileRequest {}
+message ExistsRequest {}
 
-message CheckProfileResponse {
-  bool exists = 1;
+message ExistsResponse {
+  common.profile.v1.Exists exists = 1;
 }
 
 message CreateProfileRequest {
