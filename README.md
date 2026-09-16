@@ -23,6 +23,12 @@ This matrix tracks the structural schema completion for external edges, internal
     - [x] `AccountVerification`
     - [x] `ResendAccountVerification`
     - [x] `Refresh`
+- [x] **Profile**
+    - [x] `Profile`
+    - [x] `About`
+    - [x] `Experiences`
+    - [x] `Educations`
+    - [x] `Socials`
 
 ---
 
@@ -41,7 +47,7 @@ This matrix tracks the structural schema completion for external edges, internal
     - [X] **Profile**
         - [X] `Create` | `Get` | `Update`
     - [X] **About**
-        - [X] `Create` | `Get`
+        - [X] `Create` | `Get` | `Update`
     - [X] **Domain**
         - [X] `Create` | `Get` | `Verify` | `Delete` | `List`
     - [X] **Education**
@@ -68,17 +74,17 @@ This matrix tracks the structural schema completion for external edges, internal
     - [X] **About**
         - [X] `Get` | `Update`
     - [X] **Domain**
-        - [X] `Get` | `List`
+        - [X] `Get` | `List` | `Delete`
     - [X] **Education**
-        - [X] `Get` | `Update` | `List`
+        - [X] `Get` | `Update` | `List` | `Delete`
     - [X] **Experience**
-        - [X] `Get` | `Update` | `List`
+        - [X] `Get` | `Update` | `List` | `Delete`
     - [X] **Icons**
         - [X] `Create`| `Update` | `Get` | `Delete` | `List`
     - [X] **Nameservers**
         - [X] `Create`| `Get` | `Delete` | `List`
     - [X] **Social**
-        - [X] `Update` | `List`
+        - [X] `Update` | `List` | `Delete`
 
 ---
 

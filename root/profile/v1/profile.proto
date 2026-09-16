@@ -18,6 +18,7 @@ service RootProfileService {
 
   // Domains
   rpc Domains(DomainsRequest) returns (DomainsResponse);
+  rpc DeleteDomain(DeleteDomainRequest) returns (DeleteDomainResponse);
 
   // Nameservers
   rpc Nameservers(NameserversRequest) returns (NameserversResponse);
@@ -28,11 +29,13 @@ service RootProfileService {
   rpc Education(EducationRequest) returns (EducationResponse);
   rpc UpdateEducation(UpdateEducationRequest) returns (UpdateEducationResponse);
   rpc Educations(EducationsRequest) returns (EducationsResponse);
+  rpc DeleteEducation(DeleteEducationRequest) returns (DeleteEducationResponse);
 
   // Experience
   rpc Experience(ExperienceRequest) returns (ExperienceResponse);
   rpc UpdateExperience(UpdateExperienceRequest) returns (UpdateExperienceResponse);
   rpc Experiences(ExperiencesRequest) returns (ExperiencesResponse);
+  rpc DeleteExperience(DeleteExperienceRequest) returns (DeleteExperienceResponse);
 
   // Icons
   rpc Icons(IconsRequest) returns (IconsResponse);
@@ -44,6 +47,7 @@ service RootProfileService {
   // Social
   rpc UpdateSocial(UpdateSocialRequest) returns (UpdateSocialResponse);
   rpc Socials(SocialsRequest) returns (SocialsResponse);
+  rpc DeleteSocial(DeleteSocialRequest) returns (DeleteSocialResponse);
 }
 
 // Profile
@@ -114,7 +118,7 @@ message DomainsResponse {
   repeated common.profile.v1.Domains domains = 1;
 }
 
-message CheckDomainRequest {
+message DeleteDomainRequest {
   string id = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string.uuid = true
@@ -123,13 +127,9 @@ message CheckDomainRequest {
     (buf.validate.field).required = true,
     (buf.validate.field).string.uuid = true
   ];
-  string txt = 3 [(buf.validate.field).required = true];
-  string dns = 4 [(buf.validate.field).required = true];
 }
 
-message CheckDomainResponse {
-  string id = 1;
-}
+message DeleteDomainResponse {}
 
 // Education
 message EducationRequest {
@@ -173,6 +173,28 @@ message EducationsResponse {
   repeated common.profile.v1.Educations educations = 1;
 }
 
+message DeleteEducationRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  string user_id = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message DeleteEducationResponse {}
+
+message DeleteEducationsRequest {
+  string user_id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message DeleteEducationsResponse {}
+
 // Experience
 message ExperienceRequest {
   string id = 1 [
@@ -214,6 +236,28 @@ message ExperiencesRequest {
 message ExperiencesResponse {
   repeated common.profile.v1.Experiences experiences = 1;
 }
+
+message DeleteExperienceRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  string user_id = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message DeleteExperienceResponse {}
+
+message DeleteExperiencesRequest {
+  string user_id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message DeleteExperiencesResponse {}
 
 // Icon
 message IconsRequest {}
@@ -269,6 +313,10 @@ message DeleteIconRequest {
 }
 
 message DeleteIconResponse {}
+
+message DeleteIconsRequest {}
+
+message DeleteIconsResponse {}
 
 // Social
 message UpdateSocialRequest {
@@ -356,6 +404,29 @@ message CreateUpdateIcon {
   ];
 }
 
+message DeleteSocialRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  string user_id = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message DeleteSocialResponse {}
+
+message DeleteSocialsRequest {
+  string user_id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message DeleteSocialsResponse {}
+
+// Nameserver
 message CreateNameserverRequest {
   string ip_type = 1 [
     (buf.validate.field).required = true,
