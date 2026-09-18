@@ -39,6 +39,14 @@ message RegisterRequest {
       pattern: "^\\+[1-9]\\d{1,14}$"
     }
   ];
+  string username = 5 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 4
+      max_len: 64
+      pattern: "^[a-z]+[0-9]*$"
+    }
+  ];
 
   option (buf.validate.message).cel = {
     id: "password_match"
