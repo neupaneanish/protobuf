@@ -6,43 +6,30 @@ import "buf/validate/validate.proto";
 import "google/protobuf/timestamp.proto";
 
 service RootAuthenticationService {
-  rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleResponse);
-  rpc UpdateStatus(UpdateStatusRequest) returns (UpdateStatusResponse);
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
   rpc User(UserRequest) returns (UserResponse);
   rpc Users(UsersRequest) returns (UsersResponse);
 }
 
-message UpdateRoleRequest {
+message UpdateUserRequest {
   string id = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string.uuid = true
   ];
-  string role = 2 [(buf.validate.field).required = true];
-  google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
-}
-
-message UpdateRoleResponse {
-  string id = 1;
-  string role = 2;
-  google.protobuf.Timestamp updated_at = 3;
-  string updated_by = 4;
-}
-
-message UpdateStatusRequest {
-  string id = 1 [
+  string username = 2 [
     (buf.validate.field).required = true,
-    (buf.validate.field).string.uuid = true
+    (buf.validate.field).string = {
+      min_len: 4
+      max_len: 64
+      pattern: "^[a-z]+[0-9]*$"
+    }
   ];
-  string status = 2 [(buf.validate.field).required = true];
-  google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
+  string role = 3 [(buf.validate.field).required = true];
+  string status = 4 [(buf.validate.field).required = true];
+  google.protobuf.Timestamp updated_at = 5 [(buf.validate.field).required = true];
 }
 
-message UpdateStatusResponse {
-  string id = 1;
-  string status = 2;
-  google.protobuf.Timestamp updated_at = 3;
-  string updated_by = 4;
-}
+message UpdateUserResponse {}
 
 message UsersRequest {}
 
