@@ -3,7 +3,7 @@ syntax = "proto3";
 package gateway.authentication.v1;
 
 import "buf/validate/validate.proto";
-import "common/password/v1/password.proto";
+import "common/authentication/v1/authentication.proto";
 import "google/protobuf/timestamp.proto";
 
 service GatewayAuthenticationService {
@@ -16,6 +16,9 @@ service GatewayAuthenticationService {
 
   rpc Role(RoleRequest) returns (RoleResponse);
 
+  rpc UpdateUsername(UpdateUsernameRequest) returns (UpdateUsernameResponse);
+  rpc UpdateEmail(UpdateEmailRequest) returns (UpdateEmailResponse);
+
   rpc Profile(ProfileRequest) returns (ProfileResponse);
 
   rpc Logout(LogoutRequest) returns (LogoutResponse);
@@ -27,10 +30,30 @@ enum PasswordVerificationMethod {
   PASSWORD_VERIFICATION_METHOD_CHANGE = 1;
   PASSWORD_VERIFICATION_METHOD_ENABLED = 2;
   PASSWORD_VERIFICATION_METHOD_DISABLED = 3;
+  PASSWORD_VERIFICATION_METHOD_EMAIL = 4;
 }
 
+message UpdateUsernameRequest {
+  common.authentication.v1.Username username = 1 [(buf.validate.field).required = true];
+}
+
+message UpdateUsernameResponse {}
+
+message UpdateEmailRequest {
+  string session = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  string email = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.email = true
+  ];
+}
+
+message UpdateEmailResponse {}
+
 message PasswordVerificationRequest {
-  common.password.v1.Password password = 1 [(buf.validate.field).required = true];
+  common.authentication.v1.Password password = 1 [(buf.validate.field).required = true];
   PasswordVerificationMethod method = 2 [(buf.validate.field).required = true];
 }
 
@@ -68,13 +91,13 @@ message PasswordSessionVerificationResponse {
 
 message ChangePasswordRequest {
   string session = 1 [(buf.validate.field).required = true];
-  common.password.v1.Password password = 2 [(buf.validate.field).required = true];
-  common.password.v1.Password confirm_password = 3 [(buf.validate.field).required = true];
+  common.authentication.v1.Password password = 2 [(buf.validate.field).required = true];
+  common.authentication.v1.Password confirm_password = 3 [(buf.validate.field).required = true];
 
   option (buf.validate.message).cel = {
     id: "password_miss_match"
     expression: "this.password.value == this.confirm_password.value"
-    message: "Password and confirm password must match"
+    message: "Password and confirm authentication must match"
   };
 }
 

@@ -1,8 +1,9 @@
 syntax = "proto3";
 
-package common.password.v1;
+package common.authentication.v1;
 
 import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
 
 message Password {
   string value = 1 [(buf.validate.field).string = {
@@ -33,4 +34,16 @@ message Password {
     expression: "this.value.matches('.*[!@#$%^&*(),.?\":{}|<>_-].*')"
     message: "Password must contain at least one special symbol"
   };
+}
+
+message Username {
+  string value = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 4
+      max_len: 64
+      pattern: "^[a-z]+[0-9]*$"
+    }
+  ];
+  google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
 }
