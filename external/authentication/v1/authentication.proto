@@ -3,7 +3,7 @@ syntax = "proto3";
 package external.authentication.v1;
 
 import "buf/validate/validate.proto";
-import "common/password/v1/password.proto";
+import "common/authentication/v1/authentication.proto";
 import "google/protobuf/timestamp.proto";
 
 enum VerificationMethod {
@@ -29,8 +29,8 @@ message RegisterRequest {
     (buf.validate.field).required = true,
     (buf.validate.field).string.email = true
   ];
-  common.password.v1.Password password = 2 [(buf.validate.field).required = true];
-  common.password.v1.Password confirm_password = 3 [(buf.validate.field).required = true];
+  common.authentication.v1.Password password = 2 [(buf.validate.field).required = true];
+  common.authentication.v1.Password confirm_password = 3 [(buf.validate.field).required = true];
   string phone = 4 [
     (buf.validate.field).required = true,
     (buf.validate.field).string = {
@@ -64,7 +64,7 @@ message LoginRequest {
     (buf.validate.field).required = true,
     (buf.validate.field).string.email = true
   ];
-  common.password.v1.Password password = 2 [(buf.validate.field).required = true];
+  common.authentication.v1.Password password = 2 [(buf.validate.field).required = true];
 }
 
 message LoginResponse {
@@ -121,8 +121,8 @@ message VerificationResponse {
 
 message ResetPasswordRequest {
   string session = 1 [(buf.validate.field).required = true];
-  common.password.v1.Password password = 2 [(buf.validate.field).required = true];
-  common.password.v1.Password confirm_password = 3 [(buf.validate.field).required = true];
+  common.authentication.v1.Password password = 2 [(buf.validate.field).required = true];
+  common.authentication.v1.Password confirm_password = 3 [(buf.validate.field).required = true];
 
   option (buf.validate.message).cel = {
     id: "password_mismatch"
