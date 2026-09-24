@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package external.profile.v1;
 
-import "common/profile/v1/profile.proto";
+import "google/protobuf/timestamp.proto";
 
 service ExternalProfileService {
   rpc Exists(ExistsRequest) returns (ExistsResponse);
@@ -13,10 +13,18 @@ service ExternalProfileService {
   rpc Socials(SocialsRequest) returns (SocialsResponse);
 }
 
+message Exists {
+  bool profile = 1;
+  bool about = 2;
+  bool educations = 3;
+  bool experiences = 4;
+  bool socials = 5;
+}
+
 message ExistsRequest {}
 
 message ExistsResponse {
-  common.profile.v1.Exists exists = 1;
+  Exists exists = 1;
 }
 
 // Profile
@@ -35,17 +43,35 @@ message AboutResponse {
 }
 
 // Education
+message Educations {
+  string id = 1;
+  string user_id = 2;
+  string school = 3;
+  string degree = 4;
+  google.protobuf.Timestamp start_date = 5;
+  google.protobuf.Timestamp end_date = 6;
+}
+
 message EducationsRequest {}
 
 message EducationsResponse {
-  repeated common.profile.v1.Educations educations = 1;
+  Educations educations = 1;
 }
 
 // Experience
+message Experiences {
+  string id = 1;
+  string user_id = 2;
+  string title = 3;
+  string company_name = 4;
+  google.protobuf.Timestamp start_date = 7;
+  google.protobuf.Timestamp end_date = 8;
+}
+
 message ExperiencesRequest {}
 
 message ExperiencesResponse {
-  repeated common.profile.v1.Experiences experiences = 1;
+  Experiences experiences = 1;
 }
 
 // Socials
