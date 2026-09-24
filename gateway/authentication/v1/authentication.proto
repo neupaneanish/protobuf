@@ -17,7 +17,7 @@ service GatewayAuthenticationService {
   rpc Role(RoleRequest) returns (RoleResponse);
 
   rpc UpdateUsername(UpdateUsernameRequest) returns (UpdateUsernameResponse);
-  rpc UpdateEmail(UpdateEmailRequest) returns (UpdateEmailResponse);
+  rpc ChangeEmail(ChangeEmailRequest) returns (ChangeEmailResponse);
 
   rpc Profile(ProfileRequest) returns (ProfileResponse);
 
@@ -39,7 +39,7 @@ message UpdateUsernameRequest {
 
 message UpdateUsernameResponse {}
 
-message UpdateEmailRequest {
+message ChangeEmailRequest {
   string session = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string.uuid = true
@@ -50,7 +50,7 @@ message UpdateEmailRequest {
   ];
 }
 
-message UpdateEmailResponse {}
+message ChangeEmailResponse {}
 
 message PasswordVerificationRequest {
   common.authentication.v1.Password password = 1 [(buf.validate.field).required = true];
@@ -86,6 +86,7 @@ message PasswordSessionVerificationResponse {
     string change_password = 1;
     EnableTwoFactor enable_two_factor = 2;
     bool disabled_two_factor = 3;
+    string change_email = 4;
   }
 }
 
