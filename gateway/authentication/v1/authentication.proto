@@ -40,10 +40,7 @@ message UpdateUsernameRequest {
 message UpdateUsernameResponse {}
 
 message ChangeEmailRequest {
-  string session = 1 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string.uuid = true
-  ];
+  string session = 1 [(buf.validate.field).required = true];
   string email = 2 [
     (buf.validate.field).required = true,
     (buf.validate.field).string.email = true
