@@ -15,6 +15,8 @@ message Profile {
   string created_by = 6;
   google.protobuf.Timestamp updated_at = 7;
   string updated_by = 8;
+  string created_by_username = 9;
+  string updated_by_username = 10;
 }
 
 message CreateUpdateProfile {
@@ -53,6 +55,8 @@ message About {
   string created_by = 4;
   google.protobuf.Timestamp updated_at = 5;
   string updated_by = 6;
+  string created_by_username = 7;
+  string updated_by_username = 8;
 }
 
 message Domains {
@@ -67,6 +71,8 @@ message Domains {
   string created_by = 9;
   google.protobuf.Timestamp updated_at = 10;
   string updated_by = 11;
+  string created_by_username = 12;
+  string updated_by_username = 13;
 }
 
 message CreateUpdateEducation {
@@ -175,6 +181,8 @@ message Education {
   string created_by = 13;
   google.protobuf.Timestamp updated_at = 14;
   string updated_by = 15;
+  string created_by_username = 16;
+  string updated_by_username = 17;
 }
 
 message Educations {
@@ -209,6 +217,8 @@ message Experience {
   string created_by = 11;
   google.protobuf.Timestamp updated_at = 12;
   string updated_by = 13;
+  string created_by_username = 14;
+  string updated_by_username = 15;
 }
 
 message CreateUpdateExperience {
@@ -309,6 +319,8 @@ message Socials {
   string created_by = 9;
   google.protobuf.Timestamp updated_at = 10;
   string updated_by = 11;
+  string created_by_username = 12;
+  string updated_by_username = 13;
 }
 
 message Icons {

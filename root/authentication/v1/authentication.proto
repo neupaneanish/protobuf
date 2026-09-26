@@ -10,21 +10,9 @@ service RootAuthenticationService {
   rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleResponse);
   rpc UpdateStatus(UpdateStatusRequest) returns (UpdateStatusResponse);
   rpc UpdateUsername(UpdateUsernameRequest) returns (UpdateUsernameResponse);
-  rpc Username(UsernameRequest) returns (UsernameResponse);
 
   rpc User(UserRequest) returns (UserResponse);
   rpc Users(UsersRequest) returns (UsersResponse);
-}
-
-message UsernameRequest {
-  string id = 1 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string.uuid = true
-  ];
-}
-message UsernameResponse {
-  string id = 1;
-  string username = 2;
 }
 
 message UpdateRoleRequest {
@@ -109,4 +97,6 @@ message UserResponse {
   string created_by = 14;
   google.protobuf.Timestamp updated_at = 15;
   string updated_by = 16;
+  string created_by_username = 17;
+  string updated_by_username = 18;
 }
