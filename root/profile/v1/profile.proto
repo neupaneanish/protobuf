@@ -278,6 +278,8 @@ message IconResponse {
   string created_by = 9;
   google.protobuf.Timestamp updated_at = 10;
   string updated_by = 11;
+  string created_by_username = 12;
+  string updated_by_username = 13;
 }
 
 message CreateIconRequest {
@@ -460,4 +462,6 @@ message Nameservers {
   string created_by = 5;
   google.protobuf.Timestamp updated_at = 6;
   string updated_by = 7;
+  string created_by_username = 8;
+  string updated_by_username = 9;
 }
