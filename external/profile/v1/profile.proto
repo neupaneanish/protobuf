@@ -55,7 +55,7 @@ message Educations {
 message EducationsRequest {}
 
 message EducationsResponse {
-  Educations educations = 1;
+  repeated Educations educations = 1;
 }
 
 // Experience
@@ -71,7 +71,7 @@ message Experiences {
 message ExperiencesRequest {}
 
 message ExperiencesResponse {
-  Experiences experiences = 1;
+  repeated Experiences experiences = 1;
 }
 
 // Socials
