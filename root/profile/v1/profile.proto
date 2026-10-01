@@ -18,10 +18,12 @@ service RootProfileService {
 
   // Domains
   rpc Domains(DomainsRequest) returns (DomainsResponse);
+  rpc Domain(DomainRequest) returns (DomainResponse);
   rpc DeleteDomain(DeleteDomainRequest) returns (DeleteDomainResponse);
 
   // Nameservers
   rpc Nameservers(NameserversRequest) returns (NameserversResponse);
+  rpc Nameserver(NameserverRequest) returns (NameserverResponse);
   rpc CreateNameserver(CreateNameserverRequest) returns (CreateNameserverResponse);
   rpc DeleteNameserver(DeleteNameserverRequest) returns (DeleteNameserverResponse);
 
@@ -44,6 +46,13 @@ service RootProfileService {
   rpc UpdateIcon(UpdateIconRequest) returns (UpdateIconResponse);
   rpc DeleteIcon(DeleteIconRequest) returns (DeleteIconResponse);
 
+  // Templates
+  rpc CreateTemplate(CreateTemplateRequest) returns (CreateTemplateResponse);
+  rpc UpdateTemplate(UpdateTemplateRequest) returns (UpdateTemplateResponse);
+  rpc Templates(TemplatesRequest) returns (TemplatesResponse);
+  rpc TemplateIcons(TemplateIconsRequest) returns (TemplateIconsResponse);
+  rpc Template(TemplateRequest) returns (TemplateResponse);
+
   // Social
   rpc UpdateSocial(UpdateSocialRequest) returns (UpdateSocialResponse);
   rpc Socials(SocialsRequest) returns (SocialsResponse);
@@ -51,6 +60,19 @@ service RootProfileService {
 }
 
 // Profile
+message Profile {
+  string user_id = 1;
+  string name = 2;
+  string title = 3;
+  google.protobuf.Timestamp dob = 4;
+  google.protobuf.Timestamp created_at = 5;
+  string created_by = 6;
+  google.protobuf.Timestamp updated_at = 7;
+  string updated_by = 8;
+  string created_by_username = 9;
+  string updated_by_username = 10;
+}
+
 message ProfileRequest {
   string user_id = 1 [
     (buf.validate.field).required = true,
@@ -59,7 +81,7 @@ message ProfileRequest {
 }
 
 message ProfileResponse {
-  common.profile.v1.Profile profile = 1;
+  Profile profile = 1;
 }
 
 message UpdateProfileRequest {
@@ -72,10 +94,21 @@ message UpdateProfileRequest {
 }
 
 message UpdateProfileResponse {
-  common.profile.v1.Profile profile = 1;
+  Profile profile = 1;
 }
 
 // About
+message About {
+  string user_id = 1;
+  string about = 2;
+  google.protobuf.Timestamp created_at = 3;
+  string created_by = 4;
+  google.protobuf.Timestamp updated_at = 5;
+  string updated_by = 6;
+  string created_by_username = 7;
+  string updated_by_username = 8;
+}
+
 message AboutRequest {
   string user_id = 1 [
     (buf.validate.field).required = true,
@@ -84,7 +117,7 @@ message AboutRequest {
 }
 
 message AboutResponse {
-  common.profile.v1.About about = 1;
+  About about = 1;
 }
 
 message UpdateAboutRequest {
@@ -103,10 +136,48 @@ message UpdateAboutRequest {
 }
 
 message UpdateAboutResponse {
-  common.profile.v1.About about = 1;
+  About about = 1;
 }
 
 // Domain
+message DomainRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  string user_id = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message DomainResponse {
+  string id = 1;
+  string user_id = 2;
+  string template_id = 3;
+  string template = 4;
+  string template_icon = 5;
+  string hostname = 6;
+  string txt = 7;
+  string nameserver = 8;
+  string nameserver_id = 9;
+  google.protobuf.Timestamp verified_at = 10;
+  bool verified = 11;
+  google.protobuf.Timestamp created_at = 12;
+  string created_by = 13;
+  google.protobuf.Timestamp updated_at = 14;
+  string updated_by = 15;
+  string created_by_username = 16;
+  string updated_by_username = 17;
+}
+
+message Domain {
+  string id = 1;
+  string user_id = 2;
+  string hostname = 5;
+  bool verified = 7;
+}
+
 message DomainsRequest {
   string user_id = 1 [
     (buf.validate.field).required = true,
@@ -115,7 +186,7 @@ message DomainsRequest {
 }
 
 message DomainsResponse {
-  repeated common.profile.v1.Domains domains = 1;
+  repeated Domain domains = 1;
 }
 
 message DeleteDomainRequest {
@@ -127,7 +198,7 @@ message DeleteDomainRequest {
     (buf.validate.field).required = true,
     (buf.validate.field).string.uuid = true
   ];
-  string fqdn = 3 [
+  string hostname = 3 [
     (buf.validate.field).required = true,
     (buf.validate.field).string = {
       min_len: 4
@@ -141,6 +212,26 @@ message DeleteDomainRequest {
 message DeleteDomainResponse {}
 
 // Education
+message Education {
+  string id = 1;
+  string user_id = 2;
+  string school = 3;
+  string degree = 4;
+  google.protobuf.StringValue affiliation = 5;
+  google.protobuf.StringValue field_of_study = 6;
+  google.protobuf.StringValue concentration = 7;
+  google.protobuf.Timestamp start_date = 8;
+  google.protobuf.Timestamp end_date = 9;
+  string address = 10;
+  google.protobuf.StringValue description = 11;
+  google.protobuf.Timestamp created_at = 12;
+  string created_by = 13;
+  google.protobuf.Timestamp updated_at = 14;
+  string updated_by = 15;
+  string created_by_username = 16;
+  string updated_by_username = 17;
+}
+
 message EducationRequest {
   string id = 1 [
     (buf.validate.field).required = true,
@@ -153,7 +244,7 @@ message EducationRequest {
 }
 
 message EducationResponse {
-  common.profile.v1.Education education = 1;
+  Education education = 1;
 }
 
 message UpdateEducationRequest {
@@ -179,7 +270,7 @@ message EducationsRequest {
 }
 
 message EducationsResponse {
-  repeated common.profile.v1.Educations educations = 1;
+  repeated common.profile.v1.Education educations = 1;
 }
 
 message DeleteEducationRequest {
@@ -197,6 +288,24 @@ message DeleteEducationRequest {
 message DeleteEducationResponse {}
 
 // Experience
+message Experience {
+  string id = 1;
+  string user_id = 2;
+  string title = 3;
+  string company_name = 4;
+  string location = 5;
+  string location_type = 6;
+  google.protobuf.Timestamp start_date = 7;
+  google.protobuf.Timestamp end_date = 8;
+  google.protobuf.StringValue description = 9;
+  google.protobuf.Timestamp created_at = 10;
+  string created_by = 11;
+  google.protobuf.Timestamp updated_at = 12;
+  string updated_by = 13;
+  string created_by_username = 14;
+  string updated_by_username = 15;
+}
+
 message ExperienceRequest {
   string id = 1 [
     (buf.validate.field).required = true,
@@ -209,7 +318,7 @@ message ExperienceRequest {
 }
 
 message ExperienceResponse {
-  common.profile.v1.Experience experience = 1;
+  Experience experience = 1;
 }
 
 message UpdateExperienceRequest {
@@ -235,7 +344,7 @@ message ExperiencesRequest {
 }
 
 message ExperiencesResponse {
-  repeated common.profile.v1.Experiences experiences = 1;
+  repeated common.profile.v1.Experience experiences = 1;
 }
 
 message DeleteExperienceRequest {
@@ -256,7 +365,7 @@ message DeleteExperienceResponse {}
 message IconsRequest {}
 
 message IconsResponse {
-  repeated common.profile.v1.Icons icons = 1;
+  repeated common.profile.v1.Icon icons = 1;
 }
 
 message IconRequest {
@@ -313,7 +422,105 @@ message DeleteIconsRequest {}
 
 message DeleteIconsResponse {}
 
+// Template
+message CreateTemplateRequest {
+  string name = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 4
+      max_len: 24
+      pattern: "^[a-zA-Z][a-zA-Z0-9 ]*[a-zA-Z0-9]$"
+    }
+  ];
+  string icon_id = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message CreateTemplateResponse {}
+
+message UpdateTemplateRequest {
+  string name = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 4
+      max_len: 24
+      pattern: "^[a-zA-Z][a-zA-Z0-9 ]*[a-zA-Z0-9]$"
+    }
+  ];
+  string icon_id = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
+}
+
+message UpdateTemplateResponse {}
+
+message TemplatesRequest {}
+
+message TemplatesResponse {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string icon = 4;
+}
+
+message TemplateIconsRequest {}
+
+message TemplateIconsResponse {
+  common.profile.v1.Icon icons = 1;
+}
+
+message TemplateRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message TemplateResponse {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string icon = 4;
+  string icon_id = 5;
+  google.protobuf.Timestamp created_at = 8;
+  string created_by = 9;
+  google.protobuf.Timestamp updated_at = 10;
+  string updated_by = 11;
+  string created_by_username = 12;
+  string updated_by_username = 13;
+}
+
+message DeleteTemplateRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  google.protobuf.Timestamp updated_at = 10 [(buf.validate.field).required = true];
+}
+
+message DeleteTemplateResponse {}
+
 // Social
+message Social {
+  string id = 1;
+  string user_id = 2;
+  string icon_id = 3;
+  string username = 4;
+  string name = 5;
+  string site = 6;
+  string icon = 7;
+  google.protobuf.Timestamp created_at = 8;
+  string created_by = 9;
+  google.protobuf.Timestamp updated_at = 10;
+  string updated_by = 11;
+  string created_by_username = 12;
+  string updated_by_username = 13;
+}
+
 message UpdateSocialRequest {
   string user_id = 1 [
     (buf.validate.field).required = true,
@@ -332,7 +539,7 @@ message SocialsRequest {
 }
 
 message SocialsResponse {
-  repeated common.profile.v1.Socials socials = 1;
+  Social socials = 1;
 }
 
 message CreateUpdateIcon {
@@ -415,25 +622,18 @@ message DeleteSocialResponse {}
 
 // Nameserver
 message CreateNameserverRequest {
-  string ip_type = 1 [
+  string cname = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string = {
-      in: [
-        "A",
-        "AAAA"
-      ]
+      min_len: 2
+      max_len: 24
+      pattern: "^[a-z]+[0-9]*$"
     }
   ];
-  string ip = 2 [
+  string hostname = 2 [
     (buf.validate.field).required = true,
-    (buf.validate.field).string.ip = true
+    (buf.validate.field).string.hostname = true
   ];
-
-  option (buf.validate.message).cel = {
-    id: "ip_type_mismatch"
-    message: "IP address version must match record type (A requires IPv4, AAAA requires IPv6)"
-    expression: "(this.ip_type == 'A' && this.ip.isIp(4)) || (this.ip_type == 'AAAA' && this.ip.isIp(6))"
-  };
 }
 
 message CreateNameserverResponse {}
@@ -456,8 +656,20 @@ message NameserversResponse {
 
 message Nameservers {
   string id = 1;
-  string ip_type = 2;
-  string ip = 3;
+  string server = 2;
+}
+
+message NameserverRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message NameserverResponse {
+  string id = 1;
+  string cname = 2;
+  string hostname = 3;
   google.protobuf.Timestamp created_at = 4;
   string created_by = 5;
   google.protobuf.Timestamp updated_at = 6;

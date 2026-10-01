@@ -5,10 +5,10 @@ package gateway.profile.v1;
 import "buf/validate/validate.proto";
 import "common/profile/v1/profile.proto";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 
 service GatewayProfileService {
   //  Profile
-  rpc Exists(ExistsRequest) returns (ExistsResponse);
   rpc CreateProfile(CreateProfileRequest) returns (CreateProfileResponse);
   rpc Profile(ProfileRequest) returns (ProfileResponse);
   rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse);
@@ -21,8 +21,10 @@ service GatewayProfileService {
   // Domain
   rpc CreateDomain(CreateDomainRequest) returns (CreateDomainResponse);
   rpc VerifyDomain(VerifyDomainRequest) returns (VerifyDomainResponse);
+  rpc UpdateDomainTemplate(UpdateDomainTemplateRequest) returns (UpdateDomainTemplateResponse);
   rpc DeleteDomain(DeleteDomainRequest) returns (DeleteDomainResponse);
   rpc Domains(DomainsRequest) returns (DomainsResponse);
+  rpc Domain(DomainRequest) returns (DomainResponse);
 
   // Education
   rpc CreateEducation(CreateEducationRequest) returns (CreateEducationResponse);
@@ -47,10 +49,12 @@ service GatewayProfileService {
 }
 
 // Profile
-message ExistsRequest {}
-
-message ExistsResponse {
-  common.profile.v1.Exists exists = 1;
+message Profile {
+  string user_id = 1;
+  string name = 2;
+  string title = 3;
+  google.protobuf.Timestamp dob = 4;
+  google.protobuf.Timestamp updated_at = 5;
 }
 
 message CreateProfileRequest {
@@ -70,7 +74,7 @@ message CreateProfileResponse {}
 message ProfileRequest {}
 
 message ProfileResponse {
-  common.profile.v1.Profile profile = 1;
+  Profile profile = 1;
 }
 
 message UpdateProfileRequest {
@@ -79,10 +83,16 @@ message UpdateProfileRequest {
 }
 
 message UpdateProfileResponse {
-  common.profile.v1.Profile profile = 1;
+  Profile profile = 1;
 }
 
 // About
+message About {
+  string user_id = 1;
+  string about = 2;
+  google.protobuf.Timestamp updated_at = 3;
+}
+
 message CreateAboutRequest {
   string about = 1 [
     (buf.validate.field).required = true,
@@ -91,13 +101,13 @@ message CreateAboutRequest {
 }
 
 message CreateAboutResponse {
-  common.profile.v1.About about = 1;
+  About about = 1;
 }
 
 message AboutRequest {}
 
 message AboutResponse {
-  common.profile.v1.About about = 1;
+  About about = 1;
 }
 
 message UpdateAboutRequest {
@@ -112,12 +122,20 @@ message UpdateAboutRequest {
 }
 
 message UpdateAboutResponse {
-  common.profile.v1.About about = 1;
+  About about = 1;
 }
 
 // Domain
+message Domain {
+  string id = 1;
+  string user_id = 2;
+  string hostname = 3;
+  bool verified = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
 message CreateDomainRequest {
-  string url = 1 [
+  string hostname = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string = {
       min_len: 4
@@ -134,17 +152,27 @@ message VerifyDomainRequest {
     (buf.validate.field).required = true,
     (buf.validate.field).string.uuid = true
   ];
-  google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
+  string txt = 2 [(buf.validate.field).required = true];
+  google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
 }
 
 message VerifyDomainResponse {}
+
+message UpdateDomainTemplateRequest {
+  string template_id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message UpdateDomainTemplateResponse {}
 
 message DeleteDomainRequest {
   string id = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string.uuid = true
   ];
-  string fqdn = 2 [
+  string hostname = 2 [
     (buf.validate.field).required = true,
     (buf.validate.field).string = {
       min_len: 4
@@ -160,10 +188,45 @@ message DeleteDomainResponse {}
 message DomainsRequest {}
 
 message DomainsResponse {
-  repeated common.profile.v1.Domains domains = 1;
+  repeated Domain domains = 1;
+}
+
+message DomainRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message DomainResponse {
+  string id = 1;
+  string user_id = 2;
+  string template_id = 3;
+  string template = 4;
+  string template_icon = 5;
+  string hostname = 6;
+  string txt = 7;
+  string nameserver = 8;
+  bool verified = 9;
+  google.protobuf.Timestamp updated_at = 10;
 }
 
 // Education
+message Education {
+  string id = 1;
+  string user_id = 2;
+  string school = 3;
+  string degree = 4;
+  google.protobuf.StringValue affiliation = 5;
+  google.protobuf.StringValue field_of_study = 6;
+  google.protobuf.StringValue concentration = 7;
+  google.protobuf.Timestamp start_date = 8;
+  google.protobuf.Timestamp end_date = 9;
+  string address = 10;
+  google.protobuf.StringValue description = 11;
+  google.protobuf.Timestamp updated_at = 12;
+}
+
 message CreateEducationRequest {
   common.profile.v1.CreateUpdateEducation education = 1 [(buf.validate.field).required = true];
 }
@@ -178,7 +241,7 @@ message EducationRequest {
 }
 
 message EducationResponse {
-  common.profile.v1.Education education = 1;
+  Education education = 1;
 }
 
 message DeleteEducationRequest {
@@ -194,7 +257,7 @@ message DeleteEducationResponse {}
 message EducationsRequest {}
 
 message EducationsResponse {
-  repeated common.profile.v1.Educations educations = 1;
+  repeated common.profile.v1.Education educations = 1;
 }
 
 message UpdateEducationRequest {
@@ -209,6 +272,19 @@ message UpdateEducationRequest {
 message UpdateEducationResponse {}
 
 // Experience
+message Experience {
+  string id = 1;
+  string user_id = 2;
+  string title = 3;
+  string company_name = 4;
+  string location = 5;
+  string location_type = 6;
+  google.protobuf.Timestamp start_date = 7;
+  google.protobuf.Timestamp end_date = 8;
+  google.protobuf.StringValue description = 9;
+  google.protobuf.Timestamp updated_at = 10;
+}
+
 message CreateExperienceRequest {
   common.profile.v1.CreateUpdateExperience experience = 1 [(buf.validate.field).required = true];
 }
@@ -223,7 +299,7 @@ message ExperienceRequest {
 }
 
 message ExperienceResponse {
-  common.profile.v1.Experience experience = 1;
+  Experience experience = 1;
 }
 
 message UpdateExperienceRequest {
@@ -250,14 +326,24 @@ message DeleteExperienceResponse {}
 message ExperiencesRequest {}
 
 message ExperiencesResponse {
-  repeated common.profile.v1.Experiences experiences = 1;
+  repeated common.profile.v1.Experience experiences = 1;
 }
 
 // Social
+message Social {
+  string id = 1;
+  string user_id = 2;
+  string icon_id = 3;
+  string username = 4;
+  string name = 5;
+  string site = 6;
+  string icon = 7;
+  google.protobuf.Timestamp updated_at = 10;
+}
 message SocialIconsRequest {}
 
 message SocialIconsResponse {
-  repeated common.profile.v1.Icons icons = 1;
+  repeated common.profile.v1.Icon icons = 1;
 }
 
 message CreateSocialRequest {
@@ -301,5 +387,5 @@ message DeleteSocialResponse {}
 message SocialsRequest {}
 
 message SocialsResponse {
-  repeated common.profile.v1.Socials socials = 1;
+  repeated Social socials = 1;
 }
