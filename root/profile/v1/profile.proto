@@ -378,10 +378,10 @@ message IconRequest {
 message IconResponse {
   string id = 1;
   string name = 2;
-  string site = 3;
+  string site_hostname = 3;
   google.protobuf.StringValue site_suffix = 4;
-  string url = 5;
-  string slug = 6;
+  string hostname = 5;
+  string suffix = 6;
   string color = 7;
   google.protobuf.Timestamp created_at = 8;
   string created_by = 9;
@@ -556,7 +556,7 @@ message CreateUpdateIcon {
       expression: "!this.matches('.*([ ]{2,}).*')"
     }
   ];
-  string site = 2 [
+  string site_hostname = 2 [
     (buf.validate.field).required = true,
     (buf.validate.field).string = {
       min_len: 4
@@ -576,7 +576,7 @@ message CreateUpdateIcon {
       expression: "!this.matches('.*(//|\\\\.\\\\.|--|__|~~).*')"
     }
   ];
-  string url = 4 [
+  string hostname = 4 [
     (buf.validate.field).required = true,
     (buf.validate.field).string = {
       min_len: 4
@@ -584,7 +584,7 @@ message CreateUpdateIcon {
       hostname: true
     }
   ];
-  string slug = 5 [
+  string suffix = 5 [
     (buf.validate.field).required = true,
     (buf.validate.field).string = {
       min_len: 1
@@ -592,8 +592,8 @@ message CreateUpdateIcon {
       pattern: "^[a-zA-Z0-9]([a-zA-Z0-9/-]*[a-zA-Z0-9])?(\\.svg)?$"
     },
     (buf.validate.field).cel = {
-      id: "slug_no_consecutive_dots_underscore_hyphen"
-      message: "slug must not contain consecutive dots or underscore or hyphen"
+      id: "suffix_no_consecutive_dots_underscore_hyphen"
+      message: "suffix must not contain consecutive dots or underscore or hyphen"
       expression: "!this.matches('.*([/-]{2,}).*')"
     }
   ];
