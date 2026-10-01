@@ -6,19 +6,6 @@ import "buf/validate/validate.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
-message Profile {
-  string user_id = 1;
-  string name = 2;
-  string title = 3;
-  google.protobuf.Timestamp dob = 4;
-  google.protobuf.Timestamp created_at = 5;
-  string created_by = 6;
-  google.protobuf.Timestamp updated_at = 7;
-  string updated_by = 8;
-  string created_by_username = 9;
-  string updated_by_username = 10;
-}
-
 message CreateUpdateProfile {
   string name = 1 [
     (buf.validate.field).required = true,
@@ -46,33 +33,6 @@ message CreateUpdateProfile {
       expression: "!this.matches('.*([ .\\'&/()-]{2,}).*')"
     }
   ];
-}
-
-message About {
-  string user_id = 1;
-  string about = 2;
-  google.protobuf.Timestamp created_at = 3;
-  string created_by = 4;
-  google.protobuf.Timestamp updated_at = 5;
-  string updated_by = 6;
-  string created_by_username = 7;
-  string updated_by_username = 8;
-}
-
-message Domains {
-  string id = 1;
-  string user_id = 2;
-  string ip = 3;
-  string ip_type = 4;
-  string fqdn = 5;
-  string txt = 6;
-  bool verified = 7;
-  google.protobuf.Timestamp created_at = 8;
-  string created_by = 9;
-  google.protobuf.Timestamp updated_at = 10;
-  string updated_by = 11;
-  string created_by_username = 12;
-  string updated_by_username = 13;
 }
 
 message CreateUpdateEducation {
@@ -170,37 +130,8 @@ message Education {
   string user_id = 2;
   string school = 3;
   string degree = 4;
-  google.protobuf.StringValue affiliation = 5;
-  google.protobuf.StringValue field_of_study = 6;
-  google.protobuf.StringValue concentration = 7;
-  google.protobuf.Timestamp start_date = 8;
-  google.protobuf.Timestamp end_date = 9;
-  string address = 10;
-  google.protobuf.StringValue description = 11;
-  google.protobuf.Timestamp created_at = 12;
-  string created_by = 13;
-  google.protobuf.Timestamp updated_at = 14;
-  string updated_by = 15;
-  string created_by_username = 16;
-  string updated_by_username = 17;
-}
-
-message Educations {
-  string id = 1;
-  string user_id = 2;
-  string school = 3;
-  string degree = 4;
   google.protobuf.Timestamp start_date = 5;
   google.protobuf.Timestamp end_date = 6;
-}
-
-message Experiences {
-  string id = 1;
-  string user_id = 2;
-  string title = 3;
-  string company_name = 4;
-  google.protobuf.Timestamp start_date = 7;
-  google.protobuf.Timestamp end_date = 8;
 }
 
 message Experience {
@@ -208,17 +139,8 @@ message Experience {
   string user_id = 2;
   string title = 3;
   string company_name = 4;
-  string location = 5;
-  string location_type = 6;
   google.protobuf.Timestamp start_date = 7;
   google.protobuf.Timestamp end_date = 8;
-  google.protobuf.StringValue description = 9;
-  google.protobuf.Timestamp created_at = 10;
-  string created_by = 11;
-  google.protobuf.Timestamp updated_at = 12;
-  string updated_by = 13;
-  string created_by_username = 14;
-  string updated_by_username = 15;
 }
 
 message CreateUpdateExperience {
@@ -307,32 +229,8 @@ message UpdateSocial {
   google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
 }
 
-message Socials {
-  string id = 1;
-  string user_id = 2;
-  string icon_id = 3;
-  string username = 4;
-  string name = 5;
-  string site = 6;
-  string icon = 7;
-  google.protobuf.Timestamp created_at = 8;
-  string created_by = 9;
-  google.protobuf.Timestamp updated_at = 10;
-  string updated_by = 11;
-  string created_by_username = 12;
-  string updated_by_username = 13;
-}
-
-message Icons {
+message Icon {
   string id = 1;
   string name = 2;
   string icon = 3;
-}
-
-message Exists {
-  bool profile = 1;
-  bool about = 2;
-  bool educations = 3;
-  bool experiences = 4;
-  bool socials = 5;
 }
