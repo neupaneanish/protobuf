@@ -206,7 +206,18 @@ message DeleteDomainRequest {
 message DeleteDomainResponse {}
 
 // Education
-message Education {
+message EducationRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  string user_id = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message EducationResponse {
   string id = 1;
   string user_id = 2;
   string school = 3;
@@ -224,21 +235,6 @@ message Education {
   string updated_by = 15;
   string created_by_username = 16;
   string updated_by_username = 17;
-}
-
-message EducationRequest {
-  string id = 1 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string.uuid = true
-  ];
-  string user_id = 2 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string.uuid = true
-  ];
-}
-
-message EducationResponse {
-  Education education = 1;
 }
 
 message UpdateEducationRequest {
@@ -282,7 +278,18 @@ message DeleteEducationRequest {
 message DeleteEducationResponse {}
 
 // Experience
-message Experience {
+message ExperienceRequest {
+  string id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  string user_id = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message ExperienceResponse {
   string id = 1;
   string user_id = 2;
   string title = 3;
@@ -298,21 +305,6 @@ message Experience {
   string updated_by = 13;
   string created_by_username = 14;
   string updated_by_username = 15;
-}
-
-message ExperienceRequest {
-  string id = 1 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string.uuid = true
-  ];
-  string user_id = 2 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string.uuid = true
-  ];
-}
-
-message ExperienceResponse {
-  Experience experience = 1;
 }
 
 message UpdateExperienceRequest {
@@ -455,10 +447,7 @@ message UpdateTemplateResponse {}
 message TemplatesRequest {}
 
 message TemplatesResponse {
-  string id = 1;
-  string name = 2;
-  string description = 3;
-  string icon = 4;
+  repeated common.profile.v1.Template templates = 1;
 }
 
 message TemplateIconsRequest {}
@@ -544,7 +533,7 @@ message Social {
 }
 
 message SocialsResponse {
-  Social socials = 1;
+  repeated Social socials = 1;
 }
 
 message CreateUpdateIcon {
