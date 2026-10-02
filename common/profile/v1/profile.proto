@@ -234,3 +234,10 @@ message Icon {
   string name = 2;
   string icon = 3;
 }
+
+message Domain {
+  string id = 1;
+  string user_id = 2;
+  string hostname = 3;
+  bool verified = 4;
+}

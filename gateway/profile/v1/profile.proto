@@ -126,14 +126,6 @@ message UpdateAboutResponse {
 }
 
 // Domain
-message Domain {
-  string id = 1;
-  string user_id = 2;
-  string hostname = 3;
-  bool verified = 4;
-  google.protobuf.Timestamp updated_at = 5;
-}
-
 message CreateDomainRequest {
   string hostname = 1 [
     (buf.validate.field).required = true,
@@ -153,7 +145,15 @@ message VerifyDomainRequest {
     (buf.validate.field).string.uuid = true
   ];
   string txt = 2 [(buf.validate.field).required = true];
-  google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
+  string hostname = 3 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 4
+      max_len: 253
+      hostname: true
+    }
+  ];
+  google.protobuf.Timestamp updated_at = 4 [(buf.validate.field).required = true];
 }
 
 message VerifyDomainResponse {}
@@ -188,7 +188,7 @@ message DeleteDomainResponse {}
 message DomainsRequest {}
 
 message DomainsResponse {
-  repeated Domain domains = 1;
+  repeated common.profile.v1.Domain domains = 1;
 }
 
 message DomainRequest {
@@ -336,9 +336,9 @@ message Social {
   string icon_id = 3;
   string username = 4;
   string name = 5;
-  string site = 6;
+  string social = 6;
   string icon = 7;
-  google.protobuf.Timestamp updated_at = 10;
+  google.protobuf.Timestamp updated_at = 8;
 }
 message SocialIconsRequest {}
 

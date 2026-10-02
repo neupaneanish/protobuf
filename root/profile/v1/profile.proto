@@ -56,6 +56,7 @@ service RootProfileService {
   // Social
   rpc UpdateSocial(UpdateSocialRequest) returns (UpdateSocialResponse);
   rpc Socials(SocialsRequest) returns (SocialsResponse);
+  rpc Social(SocialRequest) returns (SocialResponse);
   rpc DeleteSocial(DeleteSocialRequest) returns (DeleteSocialResponse);
 }
 
@@ -171,13 +172,6 @@ message DomainResponse {
   string updated_by_username = 17;
 }
 
-message Domain {
-  string id = 1;
-  string user_id = 2;
-  string hostname = 5;
-  bool verified = 7;
-}
-
 message DomainsRequest {
   string user_id = 1 [
     (buf.validate.field).required = true,
@@ -186,7 +180,7 @@ message DomainsRequest {
 }
 
 message DomainsResponse {
-  repeated Domain domains = 1;
+  repeated common.profile.v1.Domain domains = 1;
 }
 
 message DeleteDomainRequest {
@@ -499,20 +493,22 @@ message DeleteTemplateRequest {
     (buf.validate.field).required = true,
     (buf.validate.field).string.uuid = true
   ];
-  google.protobuf.Timestamp updated_at = 10 [(buf.validate.field).required = true];
+  google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
 }
 
 message DeleteTemplateResponse {}
 
 // Social
-message Social {
+message SocialRequest {}
+
+message SocialResponse {
   string id = 1;
   string user_id = 2;
   string icon_id = 3;
-  string username = 4;
-  string name = 5;
-  string site = 6;
-  string icon = 7;
+  string icon = 4;
+  string username = 5;
+  string name = 6;
+  string social = 7;
   google.protobuf.Timestamp created_at = 8;
   string created_by = 9;
   google.protobuf.Timestamp updated_at = 10;
@@ -536,6 +532,15 @@ message SocialsRequest {
     (buf.validate.field).required = true,
     (buf.validate.field).string.uuid = true
   ];
+}
+
+message Social {
+  string id = 1;
+  string user_id = 2;
+  string icon = 4;
+  string username = 5;
+  string name = 6;
+  string social = 7;
 }
 
 message SocialsResponse {
