@@ -241,3 +241,10 @@ message Domain {
   string hostname = 3;
   bool verified = 4;
 }
+
+message Template {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string icon = 4;
+}

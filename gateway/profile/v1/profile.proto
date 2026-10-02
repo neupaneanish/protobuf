@@ -26,6 +26,9 @@ service GatewayProfileService {
   rpc Domains(DomainsRequest) returns (DomainsResponse);
   rpc Domain(DomainRequest) returns (DomainResponse);
 
+  // Template
+  rpc Templates(TemplatesRequest) returns (TemplatesResponse);
+
   // Education
   rpc CreateEducation(CreateEducationRequest) returns (CreateEducationResponse);
   rpc Education(EducationRequest) returns (EducationResponse);
@@ -212,21 +215,6 @@ message DomainResponse {
 }
 
 // Education
-message Education {
-  string id = 1;
-  string user_id = 2;
-  string school = 3;
-  string degree = 4;
-  google.protobuf.StringValue affiliation = 5;
-  google.protobuf.StringValue field_of_study = 6;
-  google.protobuf.StringValue concentration = 7;
-  google.protobuf.Timestamp start_date = 8;
-  google.protobuf.Timestamp end_date = 9;
-  string address = 10;
-  google.protobuf.StringValue description = 11;
-  google.protobuf.Timestamp updated_at = 12;
-}
-
 message CreateEducationRequest {
   common.profile.v1.CreateUpdateEducation education = 1 [(buf.validate.field).required = true];
 }
@@ -241,7 +229,18 @@ message EducationRequest {
 }
 
 message EducationResponse {
-  Education education = 1;
+  string id = 1;
+  string user_id = 2;
+  string school = 3;
+  string degree = 4;
+  google.protobuf.StringValue affiliation = 5;
+  google.protobuf.StringValue field_of_study = 6;
+  google.protobuf.StringValue concentration = 7;
+  google.protobuf.Timestamp start_date = 8;
+  google.protobuf.Timestamp end_date = 9;
+  string address = 10;
+  google.protobuf.StringValue description = 11;
+  google.protobuf.Timestamp updated_at = 12;
 }
 
 message DeleteEducationRequest {
@@ -272,19 +271,6 @@ message UpdateEducationRequest {
 message UpdateEducationResponse {}
 
 // Experience
-message Experience {
-  string id = 1;
-  string user_id = 2;
-  string title = 3;
-  string company_name = 4;
-  string location = 5;
-  string location_type = 6;
-  google.protobuf.Timestamp start_date = 7;
-  google.protobuf.Timestamp end_date = 8;
-  google.protobuf.StringValue description = 9;
-  google.protobuf.Timestamp updated_at = 10;
-}
-
 message CreateExperienceRequest {
   common.profile.v1.CreateUpdateExperience experience = 1 [(buf.validate.field).required = true];
 }
@@ -299,7 +285,16 @@ message ExperienceRequest {
 }
 
 message ExperienceResponse {
-  Experience experience = 1;
+  string id = 1;
+  string user_id = 2;
+  string title = 3;
+  string company_name = 4;
+  string location = 5;
+  string location_type = 6;
+  google.protobuf.Timestamp start_date = 7;
+  google.protobuf.Timestamp end_date = 8;
+  google.protobuf.StringValue description = 9;
+  google.protobuf.Timestamp updated_at = 10;
 }
 
 message UpdateExperienceRequest {
@@ -332,13 +327,11 @@ message ExperiencesResponse {
 // Social
 message Social {
   string id = 1;
-  string user_id = 2;
-  string icon_id = 3;
-  string username = 4;
-  string name = 5;
-  string social = 6;
-  string icon = 7;
-  google.protobuf.Timestamp updated_at = 8;
+  string username = 2;
+  string name = 3;
+  string social = 4;
+  string icon = 5;
+  google.protobuf.Timestamp updated_at = 6;
 }
 message SocialIconsRequest {}
 
@@ -388,4 +381,11 @@ message SocialsRequest {}
 
 message SocialsResponse {
   repeated Social socials = 1;
+}
+
+// Template
+message TemplatesRequest {}
+
+message TemplatesResponse {
+  repeated common.profile.v1.Template templates = 1;
 }
