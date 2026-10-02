@@ -43,7 +43,7 @@ message AboutResponse {
 }
 
 // Education
-message Educations {
+message Education {
   string id = 1;
   string user_id = 2;
   string school = 3;
@@ -55,11 +55,11 @@ message Educations {
 message EducationsRequest {}
 
 message EducationsResponse {
-  repeated Educations educations = 1;
+  repeated Education educations = 1;
 }
 
 // Experience
-message Experiences {
+message Experience {
   string id = 1;
   string user_id = 2;
   string title = 3;
@@ -71,7 +71,7 @@ message Experiences {
 message ExperiencesRequest {}
 
 message ExperiencesResponse {
-  repeated Experiences experiences = 1;
+  repeated Experience experiences = 1;
 }
 
 // Socials
@@ -84,6 +84,6 @@ message SocialsResponse {
 message Socials {
   string id = 1;
   string name = 2;
-  string url = 3;
+  string social = 3;
   string icon = 5;
 }
