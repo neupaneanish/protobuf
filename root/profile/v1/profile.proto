@@ -410,35 +410,17 @@ message DeleteIconsResponse {}
 
 // Template
 message CreateTemplateRequest {
-  string name = 1 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      min_len: 4
-      max_len: 24
-      pattern: "^[a-zA-Z][a-zA-Z0-9 ]*[a-zA-Z0-9]$"
-    }
-  ];
-  string icon_id = 2 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string.uuid = true
-  ];
+  Template template = 1 [(buf.validate.field).required = true];
 }
 
 message CreateTemplateResponse {}
 
 message UpdateTemplateRequest {
-  string name = 1 [
-    (buf.validate.field).required = true,
-    (buf.validate.field).string = {
-      min_len: 4
-      max_len: 24
-      pattern: "^[a-zA-Z][a-zA-Z0-9 ]*[a-zA-Z0-9]$"
-    }
-  ];
-  string icon_id = 2 [
+  string id = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string.uuid = true
   ];
+  Template template = 2 [(buf.validate.field).required = true];
   google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
 }
 
@@ -670,4 +652,23 @@ message NameserverResponse {
   string updated_by = 7;
   string created_by_username = 8;
   string updated_by_username = 9;
+}
+
+message Template {
+  string icon_id = 1 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  string name = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {
+      min_len: 4
+      max_len: 24
+      pattern: "^[a-zA-Z][a-zA-Z0-9 ]*[a-zA-Z0-9]$"
+    }
+  ];
+  string description = 3 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.min_len = 20
+  ];
 }
