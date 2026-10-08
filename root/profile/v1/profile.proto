@@ -52,6 +52,7 @@ service RootProfileService {
   rpc Templates(TemplatesRequest) returns (TemplatesResponse);
   rpc TemplateIcons(TemplateIconsRequest) returns (TemplateIconsResponse);
   rpc Template(TemplateRequest) returns (TemplateResponse);
+  rpc DeleteTemplate(DeleteTemplateRequest) returns (DeleteTemplateResponse);
 
   // Social
   rpc UpdateSocial(UpdateSocialRequest) returns (UpdateSocialResponse);
@@ -435,7 +436,7 @@ message TemplatesResponse {
 message TemplateIconsRequest {}
 
 message TemplateIconsResponse {
-  common.profile.v1.Icon icons = 1;
+  repeated common.profile.v1.Icon icons = 1;
 }
 
 message TemplateRequest {
