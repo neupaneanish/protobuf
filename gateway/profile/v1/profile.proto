@@ -162,10 +162,15 @@ message VerifyDomainRequest {
 message VerifyDomainResponse {}
 
 message UpdateDomainTemplateRequest {
-  string template_id = 1 [
+  string id = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string.uuid = true
   ];
+  string template_id = 2 [
+    (buf.validate.field).required = true,
+    (buf.validate.field).string.uuid = true
+  ];
+  google.protobuf.Timestamp updated_at = 3 [(buf.validate.field).required = true];
 }
 
 message UpdateDomainTemplateResponse {}
