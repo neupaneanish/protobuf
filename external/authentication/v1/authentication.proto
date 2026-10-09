@@ -21,7 +21,6 @@ service ExternalAuthenticationService {
   rpc Verification(VerificationRequest) returns (VerificationResponse);
   rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
   rpc Resend(ResendRequest) returns (ResendResponse);
-  rpc Refresh(RefreshRequest) returns (RefreshResponse);
 }
 
 message RegisterRequest {
@@ -69,15 +68,9 @@ message LoginRequest {
 
 message LoginResponse {
   oneof response {
-    Token token = 1;
+    common.authentication.v1.Session session = 1;
     VerificationSession verification = 2;
   }
-}
-
-message Token {
-  string access = 1;
-  string refresh = 2;
-  google.protobuf.Timestamp expire_at = 3;
 }
 
 message ForgetPasswordRequest {
@@ -113,7 +106,7 @@ message VerificationRequest {
 
 message VerificationResponse {
   oneof response {
-    Token token = 1;
+    common.authentication.v1.Session session = 1;
     VerificationSession verification = 2;
     ResetSession reset_session = 3;
   }
@@ -139,21 +132,16 @@ message ResendRequest {
 
 message ResendResponse {
   string session = 1;
-}
-
-message RefreshRequest {
-  string refresh = 1 [(buf.validate.field).required = true];
-}
-
-message RefreshResponse {
-  Token token = 1;
+  google.protobuf.Timestamp expire_at = 2;
 }
 
 message VerificationSession {
   string session = 1;
   VerificationMethod method = 2;
+  google.protobuf.Timestamp expire_at = 3;
 }
 
 message ResetSession {
   string session = 1;
+  google.protobuf.Timestamp expire_at = 2;
 }

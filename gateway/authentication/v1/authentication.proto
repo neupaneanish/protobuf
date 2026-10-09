@@ -23,6 +23,7 @@ service GatewayAuthenticationService {
 
   rpc Logout(LogoutRequest) returns (LogoutResponse);
   rpc LogoutAll(LogoutAllRequest) returns (LogoutAllResponse);
+  rpc Refresh(RefreshRequest) returns (RefreshResponse);
 }
 
 enum PasswordVerificationMethod {
@@ -146,6 +147,7 @@ message EnableTwoFactor {
   string session = 1;
   string uri = 2;
   string key = 3;
+  google.protobuf.Timestamp expire_at = 4;
 }
 
 message ResendRequest {
@@ -153,4 +155,13 @@ message ResendRequest {
 }
 message ResendResponse {
   string session = 1;
+  google.protobuf.Timestamp expire_at = 2;
+}
+
+message RefreshRequest {
+  string session = 1 [(buf.validate.field).required = true];
+}
+
+message RefreshResponse {
+  common.authentication.v1.Session session = 1;
 }
