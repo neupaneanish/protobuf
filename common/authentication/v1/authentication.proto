@@ -47,3 +47,8 @@ message Username {
   ];
   google.protobuf.Timestamp updated_at = 2 [(buf.validate.field).required = true];
 }
+
+message Session {
+  string value = 1;
+  google.protobuf.Timestamp expire_at = 2;
+}
