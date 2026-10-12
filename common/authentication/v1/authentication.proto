@@ -50,5 +50,5 @@ message Username {
 
 message Session {
   string session = 1;
-  google.protobuf.Timestamp expire_at = 2;
+  google.protobuf.Timestamp expires = 2;
 }

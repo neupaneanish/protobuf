@@ -131,17 +131,16 @@ message ResendRequest {
 }
 
 message ResendResponse {
-  string session = 1;
-  google.protobuf.Timestamp expire_at = 2;
+  VerificationSession verification = 2;
 }
 
 message VerificationSession {
   string session = 1;
   VerificationMethod method = 2;
-  google.protobuf.Timestamp expire_at = 3;
+  google.protobuf.Timestamp expires = 3;
 }
 
 message ResetSession {
   string session = 1;
-  google.protobuf.Timestamp expire_at = 2;
+  google.protobuf.Timestamp expires = 2;
 }
