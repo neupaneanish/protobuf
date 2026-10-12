@@ -57,6 +57,7 @@ message PasswordVerificationRequest {
 
 message PasswordVerificationResponse {
   string session = 1;
+  google.protobuf.Timestamp expires = 2;
 }
 
 message PasswordSessionVerificationRequest {
@@ -81,10 +82,10 @@ message PasswordSessionVerificationRequest {
 
 message PasswordSessionVerificationResponse {
   oneof response {
-    string change_password = 1;
+    common.authentication.v1.Session password = 1;
     EnableTwoFactor enable_two_factor = 2;
     bool disabled_two_factor = 3;
-    string change_email = 4;
+    common.authentication.v1.Session email = 4;
   }
 }
 
@@ -145,9 +146,9 @@ message LogoutAllResponse {}
 
 message EnableTwoFactor {
   string session = 1;
-  string uri = 2;
-  string key = 3;
-  google.protobuf.Timestamp expire_at = 4;
+  google.protobuf.Timestamp expires = 2;
+  string uri = 3;
+  string key = 4;
 }
 
 message ResendRequest {
@@ -155,13 +156,12 @@ message ResendRequest {
 }
 message ResendResponse {
   string session = 1;
-  google.protobuf.Timestamp expire_at = 2;
+  google.protobuf.Timestamp expires = 2;
 }
 
-message RefreshRequest {
-  string session = 1 [(buf.validate.field).required = true];
-}
+message RefreshRequest {}
 
 message RefreshResponse {
-  common.authentication.v1.Session session = 1;
+  string session = 1;
+  google.protobuf.Timestamp expires = 2;
 }
