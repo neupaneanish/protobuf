@@ -131,7 +131,8 @@ message ResendRequest {
 }
 
 message ResendResponse {
-  VerificationSession verification = 2;
+  string session = 1;
+  google.protobuf.Timestamp expires = 2;
 }
 
 message VerificationSession {
