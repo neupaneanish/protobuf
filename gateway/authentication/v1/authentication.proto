@@ -14,8 +14,6 @@ service GatewayAuthenticationService {
   rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
   rpc ConfirmTwoFactor(ConfirmTwoFactorRequest) returns (ConfirmTwoFactorResponse);
 
-  rpc Role(RoleRequest) returns (RoleResponse);
-
   rpc UpdateUsername(UpdateUsernameRequest) returns (UpdateUsernameResponse);
   rpc ChangeEmail(ChangeEmailRequest) returns (ChangeEmailResponse);
 
@@ -116,12 +114,6 @@ message ConfirmTwoFactorRequest {
 
 message ConfirmTwoFactorResponse {
   repeated string codes = 1;
-}
-
-message RoleRequest {}
-
-message RoleResponse {
-  string role = 1;
 }
 
 message ProfileRequest {}
