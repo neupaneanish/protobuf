@@ -17,7 +17,7 @@ enum VerificationMethod {
 service ExternalAuthenticationService {
   rpc Register(RegisterRequest) returns (RegisterResponse);
   rpc Login(LoginRequest) returns (LoginResponse);
-  rpc ForgetPassword(ForgetPasswordRequest) returns (ForgetPasswordResponse);
+  rpc ForgotPassword(ForgotPasswordRequest) returns (ForgotPasswordResponse);
   rpc Verification(VerificationRequest) returns (VerificationResponse);
   rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
   rpc Resend(ResendRequest) returns (ResendResponse);
@@ -73,14 +73,14 @@ message LoginResponse {
   }
 }
 
-message ForgetPasswordRequest {
+message ForgotPasswordRequest {
   string email = 1 [
     (buf.validate.field).required = true,
     (buf.validate.field).string.email = true
   ];
 }
 
-message ForgetPasswordResponse {
+message ForgotPasswordResponse {
   VerificationSession verification = 1;
 }
 

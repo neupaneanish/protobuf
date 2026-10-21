@@ -17,7 +17,7 @@ This matrix tracks the structural schema completion for external edges, internal
 - [x] **Authentication**
     - [x] `Login`
     - [x] `LoginTwoFactor`
-    - [x] `ForgetPassword`
+    - [x] `ForgotPassword`
     - [x] `Verification`
     - [x] `ResetPassword`
     - [x] `AccountVerification`
