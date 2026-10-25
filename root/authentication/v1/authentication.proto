@@ -13,6 +13,8 @@ service RootAuthenticationService {
 
   rpc User(UserRequest) returns (UserResponse);
   rpc Users(UsersRequest) returns (UsersResponse);
+
+  rpc Counts(CountsRequest) returns (CountsResponse);
 }
 
 message UpdateRoleRequest {
@@ -99,4 +101,10 @@ message UserResponse {
   string updated_by = 16;
   string created_by_username = 17;
   string updated_by_username = 18;
+}
+
+message CountsRequest {}
+
+message CountsResponse {
+  int64 users = 1;
 }

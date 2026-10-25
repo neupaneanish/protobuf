@@ -59,6 +59,8 @@ service RootProfileService {
   rpc Socials(SocialsRequest) returns (SocialsResponse);
   rpc Social(SocialRequest) returns (SocialResponse);
   rpc DeleteSocial(DeleteSocialRequest) returns (DeleteSocialResponse);
+
+  rpc Counts(CountsRequest) returns (CountsResponse);
 }
 
 // Profile
@@ -681,4 +683,18 @@ message Template {
     (buf.validate.field).required = true,
     (buf.validate.field).string.min_len = 20
   ];
+}
+
+message CountsRequest {}
+
+message CountsResponse {
+  int64 profiles = 1;
+  int64 abouts = 2;
+  int64 domains = 3;
+  int64 educations = 4;
+  int64 experiences = 5;
+  int64 socials = 6;
+  int64 nameservers = 7;
+  int64 icons = 8;
+  int64 templates = 9;
 }
