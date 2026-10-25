@@ -49,6 +49,9 @@ service GatewayProfileService {
   rpc DeleteSocial(DeleteSocialRequest) returns (DeleteSocialResponse);
   rpc Socials(SocialsRequest) returns (SocialsResponse);
   rpc SocialIcons(SocialIconsRequest) returns (SocialIconsResponse);
+
+  // Counts
+  rpc Counts(CountsRequest) returns (CountsResponse);
 }
 
 // Profile
@@ -393,4 +396,13 @@ message TemplatesRequest {}
 
 message TemplatesResponse {
   repeated common.profile.v1.Template templates = 1;
+}
+
+message CountsRequest {}
+
+message CountsResponse {
+  int64 domains = 1;
+  int64 educations = 2;
+  int64 experiences = 3;
+  int64 socials = 4;
 }
